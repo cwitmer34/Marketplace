@@ -5,7 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.cwitmer34.marketplace.data.itempdc.ItemHandler;
 import org.cwitmer34.marketplace.guis.ConfirmationGUI;
+import org.cwitmer34.marketplace.util.GeneralUtil;
 import org.jetbrains.annotations.NotNull;
 import xyz.xenondevs.invui.item.Item;
 import xyz.xenondevs.invui.item.ItemProvider;
@@ -14,19 +16,24 @@ import xyz.xenondevs.invui.item.impl.AbstractItem;
 import xyz.xenondevs.invui.item.impl.SimpleItem;
 import xyz.xenondevs.invui.window.Window;
 
-public class PurchaseItem extends AbstractItem {
+public class SellItem extends AbstractItem {
 
 	Item item;
+	double price;
 
-	public PurchaseItem(ItemStack item) {
-		this.item = new SimpleItem(item);
+	public SellItem(ItemStack itemStack, double price) {
+		ItemHandler.setPrice(itemStack, price);
+		this.item = initItem(itemStack);
+		this.price = price;
+	}
+
+	private Item initItem(ItemStack itemStack) {
+		return new ListedItem(itemStack);
 	}
 
 	@Override
 	public ItemProvider getItemProvider() {
-		return new ItemBuilder(Material.BLACK_CONCRETE)
-						.setDisplayName("§eView Listings")
-						.addLoreLines("§7Click to view your current listings");
+		return item.getItemProvider();
 	}
 
 	@Override

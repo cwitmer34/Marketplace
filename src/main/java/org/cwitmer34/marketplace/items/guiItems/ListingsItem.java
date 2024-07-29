@@ -14,6 +14,8 @@ import xyz.xenondevs.invui.item.impl.AbstractItem;
 import xyz.xenondevs.invui.item.impl.SimpleItem;
 import xyz.xenondevs.invui.window.Window;
 
+import java.util.Objects;
+
 public class ListingsItem extends AbstractItem {
 
 	private int count;
@@ -28,8 +30,9 @@ public class ListingsItem extends AbstractItem {
 	@Override
 	public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent event) {
 		if (!clickType.isLeftClick()) return;
+		Item item = new SimpleItem(Objects.requireNonNull(event.getCurrentItem()));
 		Window.single()
-						.setGui(ConfirmationGUI.get(event.getCurrentItem())) // TODO: change this to active listings
+						.setGui(ConfirmationGUI.create(item)) // TODO: change this to active listings
 						.open(player);
 		notifyWindows();
 	}

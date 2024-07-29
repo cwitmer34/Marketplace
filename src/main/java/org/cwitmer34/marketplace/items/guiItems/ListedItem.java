@@ -31,11 +31,9 @@ public class ListedItem extends AbstractItem {
 	public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent event) {
 		if (!clickType.isLeftClick()) return;
 		Window.single()
-						.setGui(ConfirmationGUI.get(event.getCurrentItem()))
+						.setGui(ConfirmationGUI.create(item))
 						.open(player);
 		notifyWindows();
-
-		player.sendMessage("You bought " + event.getCurrentItem().getI18NDisplayName());
 	}
 
 }

@@ -5,9 +5,11 @@ import org.cwitmer34.marketplace.items.guiItems.ListedItem;
 import org.cwitmer34.marketplace.items.guiItems.ListingsItem;
 import org.cwitmer34.marketplace.items.guiItems.MiscItems;
 import xyz.xenondevs.invui.gui.Gui;
+import xyz.xenondevs.invui.item.Item;
 
 public class ConfirmationGUI {
-	public static Gui get(ItemStack item) {
+
+	public static Gui create(Item itemToSell) {
 		return Gui.normal()
 						.setStructure(
 										"< < < < o > > > >",

@@ -6,9 +6,9 @@ import xyz.xenondevs.invui.gui.Gui;
 import xyz.xenondevs.invui.gui.PagedGui;
 import xyz.xenondevs.invui.gui.structure.Markers;
 
-public class MarketplaceGUI {
+public class GUIS {
 	@Getter
-	private static Gui gui = PagedGui.items().setStructure(
+	private static final Gui marketplace = PagedGui.items().setStructure(
 									"# # # # # # # # #",
 									"# x x x x x x x #",
 									"# x x x x x x x #",

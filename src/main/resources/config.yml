@@ -1,0 +1,18 @@
+mongo-uri: "mongodb://localhost:27017"
+
+general-settings:
+  prefix: "" # TODO
+  updateInterval: 20 # 20 ticks = 1 second
+  minPrice: 100.00
+  maxPrice: 1000000.00
+  cooldown: 0 # in seconds
+  duration: 7d0h0m
+  tax: 0 # in perecent, i.e 20 = 20%
+  maxListings: 5
+  priceAsInteger: false
+
+
+blackmarket:
+  discount-amount: 50 # % amount
+  cooldown: 5 # in minutes
+#  automatic: true

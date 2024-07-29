@@ -1,0 +1,43 @@
+name: Marketplace
+authors: [ Connor ]
+version: '1.0-SNAPSHOT'
+main: org.cwitmer34.marketplace.TrialMarketplace
+api-version: '1.20'
+
+#depend: [ Vault ]
+commands:
+  mpreload:
+    description: Preload the marketplace
+    usage: /mpreload
+  test:
+    description: Test command
+    usage: /test
+  marketplace:
+    description: Displays a list of items for sale through a GUI
+    usage: /marketplace
+  sell:
+    description: Sell the item in your hand
+    usage: /sell <price>
+  blackmarket:
+    description: Displays a random list of items for sale through a GUI with a discount
+    usage: /blackmarket
+  transactions:
+    description: Displays your previous transactions
+    usage: /transactions
+#
+#permissions:
+#  marketplace.view:
+#    description: Allows the player to view the marketplace
+#  marketplace.sell:
+#    description: Allows the player to sell items
+#  marketplace.blackmarket:
+#    description: Allows the player to generate the blackmarket
+#  marketplace.history:
+#    description: Allows the player to view their transaction history
+#  marketplace.default:
+#    description: Gives Player access to the marketplace
+#    children:
+#      marketplace.view: true
+#      marketplace.sell: true
+#      marketplace.history: true
+#    default: false

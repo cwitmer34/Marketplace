@@ -6,7 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.bukkit.inventory.ItemStack;
 import org.cwitmer34.marketplace.guis.MarketplaceGUI;
 import org.cwitmer34.marketplace.items.guiItems.ListedItem;
 import org.cwitmer34.marketplace.util.GeneralUtil;
@@ -40,8 +40,11 @@ public class Sell implements CommandExecutor {
 			return true;
 		}
 
-		Item item = new ListedItem(player.getInventory().getItemInMainHand());
+		ItemStack itemStack = player.getInventory().getItemInMainHand();
+		Item item = new ListedItem(itemStack, Objects.requireNonNull(tryParse(args[0])), SettingsUtil.duration);
+
 		MarketplaceGUI.getGui().addItems(item);
+
 		return true;
 	}
 

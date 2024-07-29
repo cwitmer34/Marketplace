@@ -23,7 +23,11 @@ public class GeneralUtil {
 	public static final Component prefix = Component.empty().append(Component.text(" ⚡ ").color(NamedTextColor.LIGHT_PURPLE).decorate(TextDecoration.BOLD));
 
 	public static String legacyFromComponent(Component component) {
-		return LegacyComponentSerializer.legacyAmpersand().serialize(component);
+		String legacy = LegacyComponentSerializer.legacySection().serialize(component);
+		if (!legacy.contains("&") && !legacy.contains("§")) {
+			legacy = "&5&o" + legacy;
+		}
+		return legacy.replaceAll("&m", "").replaceAll("&", "§");
 	}
 
 	public static ItemStack itemStackFromBase64(String data) throws IOException {
@@ -32,7 +36,7 @@ public class GeneralUtil {
 			BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
 			return (ItemStack) dataInput.readObject();
 		} catch (Exception e) {
-			throw new IOException("unable to decode:", e);
+			throw new IOException("Unable to decode:", e);
 		}
 	}
 
@@ -48,7 +52,7 @@ public class GeneralUtil {
 			dataOutput.close();
 			return Base64Coder.encodeLines(outputStream.toByteArray());
 		} catch (Exception e) {
-			throw new IllegalStateException("cannot save item stack:", e);
+			throw new IllegalStateException("Cannot save item stack:", e);
 		}
 	}
 
@@ -56,5 +60,9 @@ public class GeneralUtil {
 		ItemStack itemStack = item.getItemProvider().get();
 		itemStack.getItemMeta().getPersistentDataContainer().get(new NamespacedKey("marketplace", "price"), PersistentDataType.DOUBLE);
 		return 0;
+	}
+
+	public static String updateDuration(String duration) {
+		return "";
 	}
 }

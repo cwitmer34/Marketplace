@@ -1,15 +1,13 @@
 package org.cwitmer34.marketplace.guis;
 
 import org.bukkit.inventory.ItemStack;
-import org.cwitmer34.marketplace.items.guiItems.ListedItem;
-import org.cwitmer34.marketplace.items.guiItems.ListingsItem;
-import org.cwitmer34.marketplace.items.guiItems.MiscItems;
+import org.cwitmer34.marketplace.items.guiItems.*;
 import xyz.xenondevs.invui.gui.Gui;
 import xyz.xenondevs.invui.item.Item;
 
 public class ConfirmationGUI {
 
-	public static Gui create(Item itemToSell) {
+	public static Gui create(Item itemToSell, ItemStack originalItem) {
 		return Gui.normal()
 						.setStructure(
 										"< < < < o > > > >",
@@ -18,9 +16,9 @@ public class ConfirmationGUI {
 										"< < < < o > > > >",
 										"< < < < o > > > >",
 										"< < < < o > > > >")
-						.addIngredient('<', MiscItems.cancel)
-						.addIngredient('o', ListingsItem::new)
-						.addIngredient('>', MiscItems.confirm)
+						.addIngredient('<', new CancelItem())
+						.addIngredient('o', itemToSell)
+						.addIngredient('>', new ConfirmItem(itemToSell, originalItem))
 						.build();
 
 	}

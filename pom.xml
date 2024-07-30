@@ -94,5 +94,10 @@
             <version>1.33</version>
             <type>pom</type>
         </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>5.1.0</version>
+        </dependency>
     </dependencies>
 </project>

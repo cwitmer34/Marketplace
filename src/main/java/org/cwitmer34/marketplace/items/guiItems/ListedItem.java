@@ -40,7 +40,7 @@ public class ListedItem extends AbstractItem {
 	public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent event) {
 		if (!clickType.isLeftClick()) return;
 		Window.single()
-						.setGui(ConfirmationGUI.create(item, originalItem))
+						.setGui(ConfirmationGUI.create(item, price, originalItem))
 						.open(player);
 		notifyWindows();
 	}

@@ -1,5 +1,6 @@
 package org.cwitmer34.marketplace;
 
+import com.mongodb.client.MongoClient;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -7,12 +8,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.cwitmer34.marketplace.commands.*;
+import org.cwitmer34.marketplace.data.mongo.Mongo;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 
 public final class TrialMarketplace extends JavaPlugin {
 
 	@Getter
 	public static Economy economy = null;
+
+	@Getter
+	public static Mongo mongo;
 
 	@Getter
 	public static TrialMarketplace plugin;
@@ -23,6 +28,7 @@ public final class TrialMarketplace extends JavaPlugin {
 	public void onEnable() {
 
 		plugin = this;
+		mongo = new Mongo();
 		saveDefaultConfig();
 		config = getConfig();
 

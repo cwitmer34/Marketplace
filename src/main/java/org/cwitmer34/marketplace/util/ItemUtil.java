@@ -25,9 +25,9 @@ public class ItemUtil {
 		}
 
 		lore.addAll(List.of(
-						"§d----------",
-						"§8Price      §7$" + price,
-						"§8Expires in §7" + duration
+						"§7----------",
+						"§dPrice §a$" + price,
+						"§dExpires in §f" + duration
 		));
 
 		return lore;

@@ -13,7 +13,6 @@ import java.util.Map;
 @AllArgsConstructor
 public class PlayerTransactions {
 	private String uuid;
-	private String duration;
 	private List<String> transactions;
 
 	public final Document toBson() {

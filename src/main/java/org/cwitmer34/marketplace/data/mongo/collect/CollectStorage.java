@@ -1,46 +1,48 @@
 package org.cwitmer34.marketplace.data.mongo.collect;
 
+import org.bson.Document;
+
 public interface CollectStorage {
 
 	/**
-	 * Load the collection from the storage
+	 * Load the collect from the storage
 	 *
-	 * @param collection The collection to load
+	 * @param collect The collect to load
 	 */
 
-	void load(PlayerCollect collection);
+	void load(PlayerCollect collect);
 
 	/**
-	 * Save the collection to the storage
+	 * Save the collect to the storage
 	 *
-	 * @param collection The collection to save
+	 * @param collect The collect to save
 	 */
 
-	void save(PlayerCollect collection);
+	void save(PlayerCollect collect);
 
 	/**
-	 * Delete the collection from the storage
+	 * Delete the collect from the storage
 	 *
-	 * @param collection The collection to delete
+	 * @param collect The collect to delete
 	 */
 
-	void delete(PlayerCollect collection);
+	void delete(PlayerCollect collect);
 
 	/**
-	 * Add an item to the collection
+	 * Add an item to the collect
 	 *
-	 * @param collection The collection to add the item to
+	 * @param collect The collect to add the item to
 	 * @param serializedItem The serialized item to add
 	 */
 
-	void addItemToCollect(PlayerCollect collection, String serializedItem);
+	void addItemToCollect(PlayerCollect collect, String serializedItem);
 
 	/**
-	 * Remove an item from the collection
+	 * Remove an item from the collect
 	 *
-	 * @param collection The collection to remove the item from
+	 * @param collect The collect to remove the item from
 	 * @param serializedItem The serialized item to remove
 	 */
 
-	void removeItemFromCollect(PlayerCollect collection, String serializedItem);
+	void removeItemFromCollect(PlayerCollect collect, String serializedItem);
 }

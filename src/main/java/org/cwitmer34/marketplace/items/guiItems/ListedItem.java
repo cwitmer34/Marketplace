@@ -46,7 +46,7 @@ public class ListedItem extends AbstractItem {
 	}
 
 	public void updateDuration() {
-		// TODO
+		// TODO (runnable)
 		item.notifyWindows();
 	}
 }

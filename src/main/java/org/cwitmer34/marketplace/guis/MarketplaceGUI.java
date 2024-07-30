@@ -5,8 +5,14 @@ import org.cwitmer34.marketplace.items.guiItems.*;
 import xyz.xenondevs.invui.gui.Gui;
 import xyz.xenondevs.invui.gui.PagedGui;
 import xyz.xenondevs.invui.gui.structure.Markers;
+import xyz.xenondevs.invui.item.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MarketplaceGUI {
+	@Getter
+	private static List<Item> itemsToDisplay = new ArrayList<>();
 	@Getter
 	private static final Gui gui = PagedGui.items().setStructure(
 									"# # # # # # # # #",

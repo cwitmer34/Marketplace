@@ -1,4 +1,4 @@
-mongo-uri: "mongodb://localhost:27017"
+mongo-uri: "mongodb+srv://connorwitmer34:<password>@data.bpuxsv3.mongodb.net/?retryWrites=true&w=majority&appName=data"
 
 general-settings:
   prefix: "" # TODO

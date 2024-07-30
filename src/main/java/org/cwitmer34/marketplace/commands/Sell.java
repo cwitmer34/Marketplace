@@ -7,11 +7,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.data.mongo.listings.ListingsHandler;
 import org.cwitmer34.marketplace.guis.MarketplaceGUI;
 import org.cwitmer34.marketplace.items.guiItems.ListedItem;
 import org.cwitmer34.marketplace.util.GeneralUtil;
 import org.cwitmer34.marketplace.util.SettingsUtil;
 import org.jetbrains.annotations.NotNull;
+import xyz.xenondevs.invui.gui.PagedGui;
 import xyz.xenondevs.invui.item.Item;
 
 import java.util.Objects;
@@ -19,6 +22,7 @@ import java.util.Objects;
 public class Sell implements CommandExecutor {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+		int sellPrice = Objects.requireNonNull(tryParse(args[0]));
 		if (!(sender instanceof Player player)) {
 			sender.sendMessage("Only players can use this command.");
 			return true;
@@ -41,9 +45,12 @@ public class Sell implements CommandExecutor {
 		}
 
 		ItemStack itemStack = player.getInventory().getItemInMainHand();
-		Item item = new ListedItem(itemStack, Objects.requireNonNull(tryParse(args[0])), SettingsUtil.duration);
+		Item item = new ListedItem(itemStack, sellPrice, SettingsUtil.duration);
 
-		MarketplaceGUI.getGui().addItems(item);
+		MarketplaceGUI.getItemsToDisplay().add(item);
+		TrialMarketplace.getListingsHandler().addListing(player.getUniqueId().toString(), GeneralUtil.itemStackToBase64(itemStack), SettingsUtil.duration, (double) sellPrice);
+
+		((PagedGui) MarketplaceGUI.getGui()).setContent(MarketplaceGUI.getItemsToDisplay());
 
 		return true;
 	}

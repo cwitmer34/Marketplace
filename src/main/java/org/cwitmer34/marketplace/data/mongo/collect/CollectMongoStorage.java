@@ -6,33 +6,33 @@ import org.cwitmer34.marketplace.TrialMarketplace;
 
 public class CollectMongoStorage implements CollectStorage {
 	@Override
-	public void load(PlayerCollect collection) {
+	public void load(PlayerCollect collect) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collection.getUuid())).first();
+				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collect.getUuid())).first();
 				if (document == null) {
-					save(collection);
+					save(collect);
 					return;
 				}
 
-				collection.setItems(document.getList("items", String.class));
+				collect.setItems(document.getList("items", String.class));
 			}
 		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
 	}
 
 	@Override
-	public void save(PlayerCollect collection) {
+	public void save(PlayerCollect collect) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collection.getUuid())).first();
+				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collect.getUuid())).first();
 				if (document == null) {
-					TrialMarketplace.getMongo().getCollect().insertOne(collection.toBson());
+					TrialMarketplace.getMongo().getCollect().insertOne(collect.toBson());
 					return;
 				}
 
-				TrialMarketplace.getMongo().getCollect().replaceOne(document, collection.toBson());
+				TrialMarketplace.getMongo().getCollect().replaceOne(document, collect.toBson());
 			}
 		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
 
@@ -40,48 +40,48 @@ public class CollectMongoStorage implements CollectStorage {
 
 
 	@Override
-	public void addItemToCollect(PlayerCollect collection, String serializedItem) {
+	public void addItemToCollect(PlayerCollect collect, String serializedItem) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collection.getUuid())).first();
+				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collect.getUuid())).first();
 				if (document == null) {
-					collection.getItems().add(serializedItem);
-					save(collection);
+					collect.getItems().add(serializedItem);
+					save(collect);
 					return;
 				}
 
-				collection.getItems().add(serializedItem);
-				TrialMarketplace.getMongo().getCollect().replaceOne(document, collection.toBson());
+				collect.getItems().add(serializedItem);
+				TrialMarketplace.getMongo().getCollect().replaceOne(document, collect.toBson());
 			}
 		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
 	}
 
 	@Override
-	public void removeItemFromCollect(PlayerCollect collection, String serializedItem) {
+	public void removeItemFromCollect(PlayerCollect collect, String serializedItem) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collection.getUuid())).first();
+				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collect.getUuid())).first();
+
 				if (document == null) {
-					collection.getItems().remove(serializedItem);
-					save(collection);
+					save(collect);
 					return;
 				}
 
-				collection.getItems().remove(serializedItem);
-				TrialMarketplace.getMongo().getCollect().replaceOne(document, collection.toBson());
+				collect.getItems().remove(serializedItem);
+				TrialMarketplace.getMongo().getCollect().replaceOne(document, collect.toBson());
 			}
 		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
 
 	}
 
 	@Override
-	public void delete(PlayerCollect collection) {
+	public void delete(PlayerCollect collect) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collection.getUuid())).first();
+				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collect.getUuid())).first();
 				if (document != null) {
 					TrialMarketplace.getMongo().getCollect().deleteOne(document);
 				}

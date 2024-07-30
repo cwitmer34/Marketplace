@@ -17,6 +17,7 @@ import xyz.xenondevs.invui.item.impl.SimpleItem;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 public class GeneralUtil {
 
@@ -38,10 +39,6 @@ public class GeneralUtil {
 		} catch (Exception e) {
 			throw new IOException("Unable to decode:", e);
 		}
-	}
-
-	public static Item itemStackToItem(ItemStack item) {
-		return new SimpleItem(item);
 	}
 
 	public static String itemStackToBase64(ItemStack item) {

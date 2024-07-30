@@ -16,34 +16,34 @@ import org.cwitmer34.marketplace.TrialMarketplace;
 @Getter
 public class Mongo {
 
-  public MongoCollection<Document> listings, collect, transactions;
-  private MongoDatabase database;
-  private MongoClient client;
+	public MongoCollection<Document> listings, collect, transactions;
+	private MongoDatabase database;
+	private MongoClient client;
 
-  public Mongo() {
-    this.init();
-  }
+	public Mongo() {
+		this.init();
+	}
 
-  public void init() {
-    ServerApi serverApi = ServerApi.builder().version(ServerApiVersion.V1).build();
+	public void init() {
+		ServerApi serverApi = ServerApi.builder().version(ServerApiVersion.V1).build();
 
-    String uri = TrialMarketplace.getPlugin().getConfig().getString("mongo-uri");
+		String uri = "mongodb+srv://connorwitmer34:admin@data.bpuxsv3.mongodb.net/?retryWrites=true&w=majority&appName=data";
 
-    MongoClientSettings settings = MongoClientSettings.builder()
-      .applyConnectionString(new ConnectionString(uri))
-      .serverApi(serverApi)
-      .uuidRepresentation(UuidRepresentation.JAVA_LEGACY)
-      .build();
+		MongoClientSettings settings = MongoClientSettings.builder()
+						.applyConnectionString(new ConnectionString(uri))
+						.serverApi(serverApi)
+						.uuidRepresentation(UuidRepresentation.JAVA_LEGACY)
+						.build();
 
-    this.client = MongoClients.create(settings);
-    this.database = client.getDatabase("prisonverseDB");
+		this.client = MongoClients.create(settings);
+		this.database = client.getDatabase("MarketplaceDB");
 
-    this.initCollections();
-  }
+		this.initCollections();
+	}
 
-  private void initCollections() {
-    this.collect = database.getCollection("Listings");
-    this.collect = database.getCollection("Collections");
-    this.transactions = database.getCollection("Transactions");
-  }
+	private void initCollections() {
+		this.listings = database.getCollection("Listings");
+		this.collect = database.getCollection("Collections");
+		this.transactions = database.getCollection("Transactions");
+	}
 }

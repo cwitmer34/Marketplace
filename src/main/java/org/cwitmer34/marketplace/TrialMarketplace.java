@@ -17,15 +17,19 @@ import org.cwitmer34.marketplace.data.mongo.Mongo;
 import org.cwitmer34.marketplace.data.mongo.collect.CollectHandler;
 import org.cwitmer34.marketplace.data.mongo.listings.ListingsHandler;
 import org.cwitmer34.marketplace.data.mongo.transactions.TransactionsHandler;
+import org.cwitmer34.marketplace.guis.CollectGUI;
 import org.cwitmer34.marketplace.guis.MarketplaceGUI;
+import org.cwitmer34.marketplace.handler.JoinHandler;
 import org.cwitmer34.marketplace.items.guiItems.ListedItem;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 import org.cwitmer34.marketplace.util.GeneralUtil;
 import xyz.xenondevs.invui.item.Item;
+import xyz.xenondevs.invui.item.impl.SimpleItem;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public final class TrialMarketplace extends JavaPlugin {
 
@@ -34,6 +38,10 @@ public final class TrialMarketplace extends JavaPlugin {
 
 	@Getter
 	public static Mongo mongo;
+
+	@Getter
+	private	static Map<String, CollectGUI> collectGuis = new HashMap<>();
+
 
 	@Getter
 	public static CollectHandler collectHandler;
@@ -80,8 +88,11 @@ public final class TrialMarketplace extends JavaPlugin {
 			ConsoleUtil.warning("Permissions provider not found, inheriting default Vault permissions...");
 		}
 
+		new JoinHandler();
+
 		getCommand("transactions").setExecutor(new Transactions());
 		getCommand("marketplace").setExecutor(new Marketplace());
+		getCommand("collect").setExecutor(new Collect());
 		getCommand("blackmarket").setExecutor(new Blackmarket());
 		getCommand("sell").setExecutor(new Sell());
 		getCommand("test").setExecutor(new test());
@@ -96,16 +107,17 @@ public final class TrialMarketplace extends JavaPlugin {
 				try (MongoCursor<Document> cursor = collection.find().iterator()) {
 					while (cursor.hasNext()) {
 						Document doc = cursor.next();
-						String uuid = doc.getString("uuid");
-						Map<String, Map<String, Double>> items = new HashMap<>();
-						BasicDBObject dbObject = (BasicDBObject) doc.get("items");
-						for (String key : dbObject.keySet()) {
-							BasicDBObject item = (BasicDBObject) dbObject.get(key);
-							items.put(key, Map.of(item.firstEntry().getKey(), item.getDouble(item.firstEntry().getKey())));
-							ItemStack itemStack = GeneralUtil.itemStackFromBase64(key);
-							MarketplaceGUI.getItemsToDisplay().add(new ListedItem(itemStack, item.getInt(item.firstEntry().getKey()), key));
-						}
-						listingsHandler.createListing(uuid, items);
+						String playerUuid = doc.getString("playerUuid");
+						String playerName = doc.getString("playerName");
+						String itemUuid = doc.getString("itemUuid");
+						String serializedItem = doc.getString("serializedItem");
+						String duration = doc.getString("duration");
+						int price = doc.getInteger("price");
+
+						listingsHandler.createListing(playerUuid, playerName, itemUuid, serializedItem, duration, price);
+						ItemStack itemStack = GeneralUtil.itemStackFromBase64(serializedItem);
+						MarketplaceGUI.addItem(new ListedItem(itemStack, playerName, itemUuid, price, duration));
+
 					}
 				} catch (Exception e) {
 					getLogger().severe("Failed to fetch listings from MongoDB: " + e.getMessage());
@@ -122,12 +134,13 @@ public final class TrialMarketplace extends JavaPlugin {
 				try (MongoCursor<Document> cursor = collection.find().iterator()) {
 					while (cursor.hasNext()) {
 						Document doc = cursor.next();
-						String uuid = doc.getString("uuid");
+						String playerUuid = doc.getString("playerUuid");
+						String collectUuid = doc.getString("collectUuid");
 						List<String> serializedItems = doc.getList("items", String.class);
-						collectHandler.createCollect(uuid, serializedItems);
+						collectHandler.createCollect(playerUuid, collectUuid, serializedItems);
 					}
 				} catch (Exception e) {
-					getLogger().severe("Failed to fetch playerCollects from MongoDB: " + e.getMessage());
+					getLogger().severe("Failed to fetch playerCollect from MongoDB: " + e.getMessage());
 				}
 			}
 		}.runTaskAsynchronously(this);
@@ -143,10 +156,10 @@ public final class TrialMarketplace extends JavaPlugin {
 						Document doc = cursor.next();
 						String uuid = doc.getString("uuid");
 						List<String> transactions = doc.getList("transactions", String.class);
-						//transactionsHandler.createTransactions(uuid, transactions);
+						transactionsHandler.createTransaction(uuid, transactions);
 					}
 				} catch (Exception e) {
-					getLogger().severe("Failed to fetch transactions from MongoDB: " + e.getMessage());
+					ConsoleUtil.severe("Failed to fetch transactions from MongoDB: " + e.getMessage());
 				}
 			}
 		}.runTaskAsynchronously(this);

@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.cwitmer34.marketplace.TrialMarketplace;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import xyz.xenondevs.invui.item.Item;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
@@ -37,6 +38,8 @@ public class GeneralUtil {
 			BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
 			return (ItemStack) dataInput.readObject();
 		} catch (Exception e) {
+			TrialMarketplace.getPlugin().getLogger().severe(e.getMessage());
+			e.printStackTrace();
 			throw new IOException("Unable to decode:", e);
 		}
 	}

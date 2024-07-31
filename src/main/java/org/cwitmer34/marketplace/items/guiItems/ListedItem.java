@@ -19,12 +19,16 @@ import java.util.Objects;
 public class ListedItem extends AbstractItem {
 
 	Item item;
+	String itemUuid;
+	String sellerName;
 	ItemStack originalItem;
 	int price;
 	String duration;
 
-	public ListedItem(ItemStack item, int price, String duration) {
+	public ListedItem(ItemStack item, String sellerName, String itemUuid, int price, String duration) {
 		this.item = new SimpleItem(new ItemBuilder(item).addLegacyLoreLines(Objects.requireNonNull(ItemUtil.initListingLore(item.lore(), price, duration))));
+		this.itemUuid = itemUuid;
+		this.sellerName = sellerName;
 		this.originalItem = item;
 		this.price = price;
 		this.duration = duration;
@@ -40,7 +44,7 @@ public class ListedItem extends AbstractItem {
 	public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent event) {
 		if (!clickType.isLeftClick()) return;
 		Window.single()
-						.setGui(ConfirmationGUI.create(item, price, originalItem))
+						.setGui(ConfirmationGUI.create(item, sellerName, itemUuid, price, originalItem))
 						.open(player);
 		notifyWindows();
 	}

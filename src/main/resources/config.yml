@@ -1,12 +1,17 @@
-mongo-uri: "mongodb+srv://connorwitmer34:<password>@data.bpuxsv3.mongodb.net/?retryWrites=true&w=majority&appName=data"
+# If you're running this on localhost, you can leave the uri as is.
+# If not, please create a free cluster on https://www.mongodb.com/atlas
+# and replace the uri with the connection string provided when clicking 'Connect'.
+# Make sure to whitelist your IP address in the network access settings.
+mongo-uri: "mongodb://localhost:27017"
 
 general-settings:
   prefix: "" # TODO
-  updateInterval: 20 # 20 ticks = 1 second
-  minPrice: 100.00
-  maxPrice: 1000000.00
+  debug: true # if set to true, you can purchase your own listings
+  addToInvIfOnline: true # setting this to false will put the item into their player's 'collect' even if they are online
+  minPrice: 100 # WARNING: negative values are interpreted as 0
+  maxPrice: 1000000
   cooldown: 0 # in seconds
-  duration: 7d0h0m
+  duration: 7d0h0m # how long you want the listing to last
   tax: 0 # in perecent, i.e 20 = 20%
   maxListings: 5
   priceAsInteger: false

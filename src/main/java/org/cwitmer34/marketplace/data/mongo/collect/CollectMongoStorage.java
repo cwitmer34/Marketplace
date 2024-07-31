@@ -1,8 +1,12 @@
 package org.cwitmer34.marketplace.data.mongo.collect;
 
+import com.mongodb.client.model.ReplaceOptions;
 import org.bson.Document;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.util.ConsoleUtil;
+
+import java.util.List;
 
 public class CollectMongoStorage implements CollectStorage {
 	@Override
@@ -10,13 +14,13 @@ public class CollectMongoStorage implements CollectStorage {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collect.getUuid())).first();
+				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("playerUuid", collect.getPlayerUuid())).first();
 				if (document == null) {
 					save(collect);
 					return;
 				}
-
-				collect.setItems(document.getList("items", String.class));
+				List<String> items = document.getList("items", String.class);
+				collect.setSerializedItems(items);
 			}
 		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
 	}
@@ -26,13 +30,12 @@ public class CollectMongoStorage implements CollectStorage {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collect.getUuid())).first();
+				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("playerUuid", collect.getPlayerUuid())).first();
 				if (document == null) {
 					TrialMarketplace.getMongo().getCollect().insertOne(collect.toBson());
 					return;
 				}
-
-				TrialMarketplace.getMongo().getCollect().replaceOne(document, collect.toBson());
+				TrialMarketplace.getMongo().getCollect().replaceOne(document, collect.toBson(), new ReplaceOptions().upsert(true));
 			}
 		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
 
@@ -40,37 +43,33 @@ public class CollectMongoStorage implements CollectStorage {
 
 
 	@Override
-	public void addItemToCollect(PlayerCollect collect, String serializedItem) {
+	public void addTransaction(PlayerCollect collect, String item) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collect.getUuid())).first();
-				if (document == null) {
-					collect.getItems().add(serializedItem);
-					save(collect);
-					return;
-				}
-
-				collect.getItems().add(serializedItem);
-				TrialMarketplace.getMongo().getCollect().replaceOne(document, collect.toBson());
+				List<String> items = collect.getSerializedItems();
+				ConsoleUtil.info("Adding collect to player: " + collect.getPlayerUuid());
+				items.addFirst(item);
+				collect.getSerializedItems().forEach(ConsoleUtil::info);
+				collect.setSerializedItems(items);
+				save(collect);
 			}
 		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
 	}
 
 	@Override
-	public void removeItemFromCollect(PlayerCollect collect, String serializedItem) {
+	public void removeItem(PlayerCollect collect, String item) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collect.getUuid())).first();
-
+				Document document = TrialMarketplace.getMongo().getTransactions().find(new Document("playerUuid", collect.getPlayerUuid())).first();
+				collect.getSerializedItems().remove(item);
 				if (document == null) {
 					save(collect);
 					return;
 				}
 
-				collect.getItems().remove(serializedItem);
-				TrialMarketplace.getMongo().getCollect().replaceOne(document, collect.toBson());
+				TrialMarketplace.getMongo().getTransactions().replaceOne(document, collect.toBson());
 			}
 		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
 
@@ -81,7 +80,7 @@ public class CollectMongoStorage implements CollectStorage {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("uuid", collect.getUuid())).first();
+				Document document = TrialMarketplace.getMongo().getCollect().find(new Document("playerUuid", collect.getPlayerUuid())).first();
 				if (document != null) {
 					TrialMarketplace.getMongo().getCollect().deleteOne(document);
 				}

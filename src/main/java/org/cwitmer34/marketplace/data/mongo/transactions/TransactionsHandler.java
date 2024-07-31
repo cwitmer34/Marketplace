@@ -1,5 +1,7 @@
 package org.cwitmer34.marketplace.data.mongo.transactions;
 
+import org.cwitmer34.marketplace.util.ConsoleUtil;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +22,9 @@ public class TransactionsHandler {
 	}
 
 	public void deleteTransaction(String uuid) {
-		transactions.remove(uuid);
 		PlayerTransactions transaction = transactions.get(uuid);
 		transactionsStorage.delete(transaction);
+		transactions.remove(uuid);
 	}
 
 	public PlayerTransactions getTransaction(String uuid) {
@@ -30,9 +32,16 @@ public class TransactionsHandler {
 	}
 
 	public void addTransaction(String uuid, String log) {
+		ConsoleUtil.info("Adding transaction to player: " + uuid);
+		if (!transactions.containsKey(uuid)) {
+			createTransaction(uuid, List.of(log));
+			return;
+		}
 		PlayerTransactions transaction = transactions.get(uuid);
-		transaction.getTransactions().addFirst(log);
-		transactionsStorage.addTransaction(transaction, log);
+		List<String> logs = transaction.getTransactions();
+		logs.add(log);
+		transaction.setTransactions(logs);
+		transactionsStorage.save(transaction);
 	}
 
 	public void removeTransaction(String uuid, String log) {

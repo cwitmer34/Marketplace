@@ -1,11 +1,12 @@
 package org.cwitmer34.marketplace.data.mongo.transactions;
 
-import com.mongodb.BasicDBObject;
+import com.mongodb.client.model.ReplaceOptions;
 import org.bson.Document;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.util.ConsoleUtil;
 
-import java.util.Map;
+import java.util.List;
 
 public class TransactionsMongoStorage implements TransactionsStorage {
 	@Override
@@ -18,7 +19,8 @@ public class TransactionsMongoStorage implements TransactionsStorage {
 					save(transactions);
 					return;
 				}
-				transactions.getTransactions().addAll(document.getList("transactions", String.class));
+				List<String> logs = document.getList("transactions", String.class);
+				transactions.setTransactions(logs);
 			}
 		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
 	}
@@ -33,8 +35,7 @@ public class TransactionsMongoStorage implements TransactionsStorage {
 					TrialMarketplace.getMongo().getTransactions().insertOne(transactions.toBson());
 					return;
 				}
-
-				TrialMarketplace.getMongo().getTransactions().replaceOne(document, transactions.toBson());
+				TrialMarketplace.getMongo().getTransactions().replaceOne(document, transactions.toBson(), new ReplaceOptions().upsert(true));
 			}
 		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
 
@@ -46,15 +47,12 @@ public class TransactionsMongoStorage implements TransactionsStorage {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getTransactions().find(new Document("uuid", transactions.getUuid())).first();
-				if (document == null) {
-					transactions.getTransactions().add(transaction);
-					save(transactions);
-					return;
-				}
-
-				transactions.getTransactions().add(transaction);
-				TrialMarketplace.getMongo().getTransactions().replaceOne(document, transactions.toBson());
+				List<String> logs = transactions.getTransactions();
+				ConsoleUtil.info("Adding transaction to player: " + transactions.getUuid());
+				logs.addFirst(transaction);
+				transactions.getTransactions().forEach(ConsoleUtil::info);
+				transactions.setTransactions(logs);
+				save(transactions);
 			}
 		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
 	}

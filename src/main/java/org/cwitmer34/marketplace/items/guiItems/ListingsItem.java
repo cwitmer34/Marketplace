@@ -27,7 +27,7 @@ public class ListingsItem extends AbstractItem {
 	@Override
 	public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent event) {
 		if (!clickType.isLeftClick()) return;
-// TODO: change this to active listings
+
 		notifyWindows();
 	}
 

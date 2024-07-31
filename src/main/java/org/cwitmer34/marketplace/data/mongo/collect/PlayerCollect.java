@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
-import org.bukkit.entity.Item;
 
 import java.util.List;
 
@@ -12,11 +11,13 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class PlayerCollect {
-	private String uuid;
-	private List<String> items;
+	private String playerUuid;
+	private String collectUuid;
+	private List<String> serializedItems;
 
 	public final Document toBson() {
-		return new Document("uuid", uuid)
-						.append("items", items);
+		return new Document("playerUuid", playerUuid)
+						.append("collectUuid", collectUuid)
+						.append("items", serializedItems);
 	}
 }

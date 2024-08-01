@@ -1,4 +1,4 @@
-//package org.cwitmer34.marketplace.items.guiItems;
+package org.cwitmer34.marketplace.items.guiItems;//package org.cwitmer34.marketplace.items.guiItems;
 //
 //import org.bukkit.Material;
 //import org.bukkit.entity.Player;

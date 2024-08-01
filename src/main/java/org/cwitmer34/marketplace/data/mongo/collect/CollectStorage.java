@@ -1,5 +1,8 @@
 package org.cwitmer34.marketplace.data.mongo.collect;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 public interface CollectStorage {
 
 	/**
@@ -8,7 +11,15 @@ public interface CollectStorage {
 	 * @param transactions The transactions to load
 	 */
 
-	void load(PlayerCollect transactions);
+	void load(final PlayerCollect transactions);
+
+	/**
+	 * Load all player collects from storage
+	 *
+	 * @return All collects
+	 */
+
+	CompletableFuture<List<PlayerCollect>> loadAll();
 
 	/**
 	 * Save the transactions to the players transaction history
@@ -16,7 +27,7 @@ public interface CollectStorage {
 	 * @param transactions The transactions to save
 	 */
 
-	void save(PlayerCollect transactions);
+	void save(final PlayerCollect transactions);
 
 	/**
 	 * Delete transaction history from a player
@@ -24,7 +35,7 @@ public interface CollectStorage {
 	 * @param transactions The transactions to delete
 	 */
 
-	void delete(PlayerCollect transactions);
+	void delete(final PlayerCollect transactions);
 
 	/**
 	 * Add a transaction to the players transaction history
@@ -33,7 +44,7 @@ public interface CollectStorage {
 	 * @param transaction  The transaction to add
 	 */
 
-	void addTransaction(PlayerCollect transactions, String transaction);
+	void addTransaction(final PlayerCollect transactions, final String transaction);
 
 	/**
 	 * Remove a transaction from the players transaction history

@@ -25,11 +25,11 @@ public class Mongo {
 	}
 
 	public void init() {
-		ServerApi serverApi = ServerApi.builder().version(ServerApiVersion.V1).build();
+		final ServerApi serverApi = ServerApi.builder().version(ServerApiVersion.V1).build();
 
-		String uri = TrialMarketplace.getPlugin().getConfig().getString("mongo-uri");
+		final String uri = TrialMarketplace.getPlugin().getConfig().getString("mongo-uri");
 
-		MongoClientSettings settings = MongoClientSettings.builder()
+		final MongoClientSettings settings = MongoClientSettings.builder()
 						.applyConnectionString(new ConnectionString(uri))
 						.serverApi(serverApi)
 						.uuidRepresentation(UuidRepresentation.JAVA_LEGACY)

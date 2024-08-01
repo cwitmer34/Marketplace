@@ -1,6 +1,5 @@
 package org.cwitmer34.marketplace;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import lombok.Getter;
@@ -17,19 +16,18 @@ import org.cwitmer34.marketplace.data.mongo.Mongo;
 import org.cwitmer34.marketplace.data.mongo.collect.CollectHandler;
 import org.cwitmer34.marketplace.data.mongo.listings.ListingsHandler;
 import org.cwitmer34.marketplace.data.mongo.transactions.TransactionsHandler;
+import org.cwitmer34.marketplace.discord.DiscordWebhook;
 import org.cwitmer34.marketplace.guis.CollectGUI;
 import org.cwitmer34.marketplace.guis.MarketplaceGUI;
-import org.cwitmer34.marketplace.handler.JoinHandler;
+import org.cwitmer34.marketplace.events.handlers.JoinHandler;
 import org.cwitmer34.marketplace.items.guiItems.ListedItem;
+import org.cwitmer34.marketplace.data.redis.Redis;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 import org.cwitmer34.marketplace.util.GeneralUtil;
-import xyz.xenondevs.invui.item.Item;
-import xyz.xenondevs.invui.item.impl.SimpleItem;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public final class TrialMarketplace extends JavaPlugin {
 
@@ -40,8 +38,13 @@ public final class TrialMarketplace extends JavaPlugin {
 	public static Mongo mongo;
 
 	@Getter
-	private	static Map<String, CollectGUI> collectGuis = new HashMap<>();
+	public static Redis redis;
 
+	@Getter
+	public static DiscordWebhook discordWebhook;
+
+	@Getter
+	public static Map<String, CollectGUI> collectGuis = new HashMap<>();
 
 	@Getter
 	public static CollectHandler collectHandler;
@@ -65,6 +68,8 @@ public final class TrialMarketplace extends JavaPlugin {
 		config = getConfig();
 
 		mongo = new Mongo();
+		redis = new Redis();
+		discordWebhook = new DiscordWebhook();
 		listingsHandler = new ListingsHandler();
 		collectHandler = new CollectHandler();
 		transactionsHandler = new TransactionsHandler();
@@ -72,7 +77,8 @@ public final class TrialMarketplace extends JavaPlugin {
 		initPlayerListings();
 		initPlayerCollects();
 		initPlayerTransactions();
-
+		listingsHandler.syncFromMongo();
+		collectHandler.syncFromMongo();
 
 		if (!hasVaultDependency()) {
 			ConsoleUtil.severe("Disabling plugin due to missing Vault dependency...");
@@ -191,6 +197,7 @@ public final class TrialMarketplace extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		// Plugin shutdown logic
+		getListingsHandler().syncListings();
+		getCollectHandler().syncCollects();
 	}
 }

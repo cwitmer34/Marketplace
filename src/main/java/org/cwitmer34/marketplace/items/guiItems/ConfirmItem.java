@@ -3,16 +3,18 @@ package org.cwitmer34.marketplace.items.guiItems;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.events.customevents.PurchaseItemEvent;
 import org.cwitmer34.marketplace.guis.MarketplaceGUI;
 import org.cwitmer34.marketplace.items.DummyItems;
 import org.cwitmer34.marketplace.util.CollectUtil;
-import org.cwitmer34.marketplace.util.Config;
+import org.cwitmer34.marketplace.config.Config;
 import org.cwitmer34.marketplace.util.GeneralUtil;
 import org.jetbrains.annotations.NotNull;
 import xyz.xenondevs.invui.item.Item;
@@ -57,6 +59,8 @@ public class ConfirmItem extends AbstractItem {
 			TrialMarketplace.getListingsHandler().deleteListing(itemUuid);
 			TrialMarketplace.getTransactionsHandler().addTransaction(player.getUniqueId().toString(), itemName + " for §a$§f" + price + " §dfrom §e" + sellerName);
 			MarketplaceGUI.setItemsToDisplay(DummyItems.get());
+			PurchaseItemEvent event = new PurchaseItemEvent(player, originalItem, (int) price);
+			Bukkit.getPluginManager().callEvent(event);
 			if (!Config.addToInvIfOnline) {
 				CollectUtil.giveUnlessFullInv(player, originalItem);
 			} else {

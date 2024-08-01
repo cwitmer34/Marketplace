@@ -1,4 +1,4 @@
-package org.cwitmer34.marketplace.handler;
+package org.cwitmer34.marketplace.events.handlers;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

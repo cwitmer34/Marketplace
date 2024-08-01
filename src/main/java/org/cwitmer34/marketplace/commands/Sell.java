@@ -2,16 +2,19 @@ package org.cwitmer34.marketplace.commands;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.events.customevents.ListItemEvent;
+import org.cwitmer34.marketplace.events.customevents.PurchaseItemEvent;
 import org.cwitmer34.marketplace.guis.MarketplaceGUI;
 import org.cwitmer34.marketplace.items.guiItems.ListedItem;
 import org.cwitmer34.marketplace.util.GeneralUtil;
-import org.cwitmer34.marketplace.util.Config;
+import org.cwitmer34.marketplace.config.Config;
 import org.jetbrains.annotations.NotNull;
 import xyz.xenondevs.invui.item.Item;
 
@@ -49,6 +52,8 @@ public class Sell implements CommandExecutor {
 
 		MarketplaceGUI.addItem(item);
 		TrialMarketplace.getListingsHandler().createListing(player.getUniqueId().toString(), player.getName(), itemUuid, GeneralUtil.itemStackToBase64(itemStack), Config.duration, sellPrice);
+		ListItemEvent event = new ListItemEvent(player, itemStack, sellPrice);
+		Bukkit.getPluginManager().callEvent(event);
 
 		return true;
 	}

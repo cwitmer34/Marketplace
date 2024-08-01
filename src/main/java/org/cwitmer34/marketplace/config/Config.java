@@ -1,4 +1,4 @@
-package org.cwitmer34.marketplace.util;
+package org.cwitmer34.marketplace.config;
 
 import lombok.Data;
 import lombok.Getter;
@@ -11,6 +11,8 @@ import java.util.List;
 @Data
 public class Config {
 	private static FileConfiguration config = TrialMarketplace.getPlugin().getConfig();
+
+	public static final String discordWebhook = config.getString("discord-webhook");
 
 	// General settings
 	public static final boolean addToInvIfOnline = config.getBoolean("general-settings.addToInvIfOnline");

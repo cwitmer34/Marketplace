@@ -22,10 +22,11 @@ public class PlayerCollect {
 		this.serializedItems = serializedItems;
 	}
 
-	private final String key = "collect:" + playerUuid + "_" + collectUuid;
+	private final String key = "collect:" + playerUuid;
 
 	public void setSerializedItems(final List<String> serializedItems) {
 		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
+			if (serializedItems.isEmpty()) return;
 			jedis.del(key);
 			jedis.rpush(key, serializedItems.toArray(new String[0]));
 		}

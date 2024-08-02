@@ -27,20 +27,31 @@ public class CollectHandler {
 		return this.collects.get(uuid);
 	}
 
-	public void addItem(final String playerUuid, final String serializedItem) {
-		final PlayerCollect collect = this.collects.get(playerUuid);
+	public PlayerCollect getOrCreateCollect(final String playerUuid) {
+		PlayerCollect collect = this.collects.get(playerUuid);
 
-		ConsoleUtil.info("Adding collect item to player: " + playerUuid + " - " + serializedItem);
-		if (collect != null && !collect.hasSerializedItem(serializedItem)) {
+		if (collect == null) {
+			collect = new PlayerCollect(playerUuid, UUID.randomUUID().toString(), new ArrayList<>());
+			this.collects.put(playerUuid, collect);
+		}
+
+		return collect;
+	}
+
+	public void addItem(final String playerUuid, final String serializedItem) {
+		final PlayerCollect collect = getOrCreateCollect(playerUuid);
+
+		if (collect != null) {
+			ConsoleUtil.info("Adding collect item to player: " + playerUuid);
 			collect.addSerializedItem(serializedItem);
 		}
 	}
 
 	public void removeItem(final String playerUuid, final String serializedItem) {
-		final PlayerCollect collect = this.collects.get(playerUuid);
+		final PlayerCollect collect = getOrCreateCollect(playerUuid);
 
 		if(collect != null && collect.hasSerializedItem(serializedItem)) {
-			ConsoleUtil.info("Removing collect item from player: " + playerUuid + " - " + serializedItem);
+			ConsoleUtil.info("Removing collect item from player: " + playerUuid);
 			collect.removeSerializedItem(serializedItem);
 			return;
 		}
@@ -51,8 +62,12 @@ public class CollectHandler {
 	public void syncCollects() {
 		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
 			final Set<String> keys = jedis.keys("collect:*");
+			keys.forEach(ConsoleUtil::warning);
+			if(keys.isEmpty()) {
+				return;
+			}
 
-			final Pattern pattern = Pattern.compile("collect:(.*)_(.*)");
+			final Pattern pattern = Pattern.compile("collect:(.*)");
 
 			for (final String key : keys) {
 				final Matcher matcher = pattern.matcher(key);
@@ -61,7 +76,7 @@ public class CollectHandler {
 					final PlayerCollect collect = this.collects.get(playerUuid);
 
 					if (collect != null) {
-						this.collectStorage.save(collect);
+						this.collectStorage.save(collect, false);
 						ConsoleUtil.info("Synced collects to Mongo from Redis.");
 					}
 				}

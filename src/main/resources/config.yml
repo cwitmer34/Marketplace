@@ -3,6 +3,8 @@
 # and replace the uri with the connection string provided when clicking 'Connect'.
 # Make sure to whitelist your IP address in the network access settings.
 mongo-uri: "mongodb://localhost:27017"
+# You can create a free redis deployment using https://railway.app/create
+redis-uri: "redis://default:AgrgBkMfQEDVQquEiTVzcSJTpEGdAtBX@viaduct.proxy.rlwy.net:26208"
 # Replace this webhook with your own, if you don't want to send logs to discord, set it to ""
 discord-webhook: "https://discord.com/api/webhooks/1268163186486411345/z_v5wT-e6QveEATDGXRgzCao1D7_ARqQbx6UwkZsEvd-gvIR1FloiXbrOKeIa5SmQ8tk"
 
@@ -17,7 +19,6 @@ general-settings:
   tax: 0 # in perecent, i.e 20 = 20%
   maxListings: 5
   priceAsInteger: false
-
 
 blackmarket:
   discount-amount: 50 # % amount

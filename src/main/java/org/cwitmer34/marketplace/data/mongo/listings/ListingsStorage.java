@@ -24,9 +24,10 @@ public interface ListingsStorage {
 	 * Save the listings to the storage
 	 *
 	 * @param listings The listings to save
+	 * @param async    If the save should be async
 	 */
 
-	void save(final PlayerListing listings);
+	void save(final PlayerListing listings, final boolean async);
 
 	/**
 	 * Delete the listings from the storage

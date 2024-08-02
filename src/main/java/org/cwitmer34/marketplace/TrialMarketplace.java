@@ -103,6 +103,7 @@ public final class TrialMarketplace extends JavaPlugin {
 		getCommand("sell").setExecutor(new Sell());
 		getCommand("test").setExecutor(new test());
 		getCommand("mpreload").setExecutor(new MPReload());
+		getCommand("flush").setExecutor(new Flush());
 	}
 
 	private void initPlayerListings() {
@@ -200,4 +201,5 @@ public final class TrialMarketplace extends JavaPlugin {
 		getListingsHandler().syncListings();
 		getCollectHandler().syncCollects();
 	}
+
 }

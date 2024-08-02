@@ -33,6 +33,13 @@ public class Redis {
 		Thread.currentThread().setContextClassLoader(previous);
 	}
 
+	public void flush() {
+		try (final Jedis jedis = this.pool.getResource()) {
+			jedis.flushAll();
+		}
+	}
+
+
 	public Jedis getPool() {
 		return this.pool.getResource();
 	}

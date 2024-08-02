@@ -26,19 +26,25 @@ public class ListingsHandler {
 
 	public void deleteListing(final String itemUuid) {
 		final PlayerListing listing = this.listings.get(itemUuid);
-		listing.removeItemFromListing(itemUuid);
+		listing.removeItemFromListing();
 	}
 
-	public JSONObject getListing(final String itemUuid) {
-		return this.listings.get(itemUuid).getPlayerListing(itemUuid);
+	public PlayerListing getListing(final String itemUuid) {
+		return this.listings.get(itemUuid).getPlayerListing();
 	}
 
 	public void syncListings() {
 		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
 			final Set<String> keys = jedis.keys("listing:*");
-
+			if(keys.isEmpty()) {
+				return;
+			}
+			TrialMarketplace.getMongo().getListings().drop();
 			for (final String key : keys) {
 				final String value = jedis.get(key);
+				if (value == null) {
+					return;
+				}
 				final JSONObject json = new JSONObject(value);
 				final PlayerListing listing = new PlayerListing(
 					json.getString("playerUuid"),
@@ -48,17 +54,20 @@ public class ListingsHandler {
 					json.getString("duration"),
 					json.getInt("price")
 				);
-				this.listingsStorage.save(listing);
+				ConsoleUtil.info("PlayerListing: " + listing);
+				this.listingsStorage.save(listing, false);
 				ConsoleUtil.info("Synced listing to Mongo from Redis.");
 			}
 		} catch (Exception e) {
 			ConsoleUtil.severe("Failed to sync listings to Mongo from Redis.");
+			e.printStackTrace();
 		}
 	}
 
 	public void syncFromMongo() {
 		listingsStorage.loadAll().thenAccept(listings -> {
 			for (final PlayerListing listing : listings) {
+				ConsoleUtil.info(String.valueOf(listing));
 				final PlayerListing playerListing = new PlayerListing(
 					listing.getPlayerUuid(),
 					listing.getPlayerName(),
@@ -69,9 +78,11 @@ public class ListingsHandler {
 				);
 				playerListing.setPlayerListing();
 				this.listings.put(listing.getItemUuid(), playerListing);
+				ConsoleUtil.info("Synced listing from Mongo to Redis.");
 			}
 		}).exceptionally(e -> {
-			ConsoleUtil.severe("Failed to sync collects from Mongo to Redis.");
+			ConsoleUtil.severe("Failed to sync listings from Mongo to Redis.");
+			e.printStackTrace();
 			return null;
 		});
 	}

@@ -5,10 +5,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.cwitmer34.marketplace.TrialMarketplace;
 
-import java.util.UUID;
-
 public class CollectUtil {
-	public static void giveUnlessFullInv(Player player, ItemStack itemStack) {
+	public static void giveUnlessFullInv(final Player player, final ItemStack itemStack) {
 		Inventory inv = player.getInventory();
 		for (ItemStack item : inv.getContents()) {
 			if (item == null) {
@@ -19,9 +17,8 @@ public class CollectUtil {
 		}
 	}
 
-	public static void add(String playerUuid, ItemStack originalItem) {
-		String serializedItem = GeneralUtil.itemStackToBase64(originalItem);
-		String collectUuid = UUID.randomUUID().toString();
+	public static void add(final String playerUuid, final ItemStack originalItem) {
+		final String serializedItem = GeneralUtil.itemStackToBase64(originalItem);
 		TrialMarketplace.getCollectHandler().addItem(playerUuid, serializedItem);
 	}
 }

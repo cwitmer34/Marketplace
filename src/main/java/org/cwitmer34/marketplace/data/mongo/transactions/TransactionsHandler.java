@@ -28,7 +28,16 @@ public class TransactionsHandler {
 	}
 
 	public PlayerTransactions getTransaction(String uuid) {
-		return transactions.get(uuid);
+		PlayerTransactions playerTransactions = transactions.get(uuid);
+
+		if(playerTransactions == null) {
+			createTransaction(uuid, List.of());
+			playerTransactions = transactions.get(uuid);
+		}
+
+		transactionsStorage.load(playerTransactions);
+		transactions.replace(uuid, playerTransactions);
+		return playerTransactions;
 	}
 
 	public void addTransaction(String uuid, String log) {

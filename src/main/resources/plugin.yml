@@ -6,6 +6,9 @@ api-version: '1.20'
 
 #depend: [ Vault ]
 commands:
+  flush:
+    description: flush redis cache
+    usage: /flush
   collect:
     description: A place to store your bought/expired items from the marketplace
     usage: /collect

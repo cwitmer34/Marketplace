@@ -18,6 +18,4 @@ public class ConsoleUtil {
 	public static void info(String message) {
 		logger.info(message);
 	}
-
-
 }

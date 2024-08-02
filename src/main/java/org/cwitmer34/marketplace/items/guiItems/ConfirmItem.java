@@ -55,7 +55,7 @@ public class ConfirmItem extends AbstractItem {
 		if (response.transactionSuccess()) {
 			// Handle listing & transaction
 			String itemName = itemStack.getItemMeta().getDisplayName().length() > 0 ? itemStack.getItemMeta().getDisplayName() : itemStack.getType().name();
-			player.sendMessage(GeneralUtil.prefix.append(Component.text("You just purchased").color(NamedTextColor.LIGHT_PURPLE)).append(Component.text(itemName)).append(Component.text(" for $" + price).color(NamedTextColor.GREEN)).append(Component.text(" from " + sellerName).color(NamedTextColor.LIGHT_PURPLE)));
+			player.sendMessage(GeneralUtil.prefix.append(Component.text("You just purchased ").color(NamedTextColor.LIGHT_PURPLE)).append(Component.text(itemName)).append(Component.text(" for $" + price).color(NamedTextColor.GREEN)).append(Component.text(" from " + sellerName).color(NamedTextColor.LIGHT_PURPLE)));
 			TrialMarketplace.getListingsHandler().deleteListing(itemUuid);
 			TrialMarketplace.getTransactionsHandler().addTransaction(player.getUniqueId().toString(), itemName + " for §a$§f" + price + " §dfrom §e" + sellerName);
 			MarketplaceGUI.setItemsToDisplay(DummyItems.get());

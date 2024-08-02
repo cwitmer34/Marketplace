@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.bson.Document;
 import org.bson.json.JsonObject;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.util.ConsoleUtil;
 import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
 
@@ -34,23 +35,44 @@ public class PlayerListing {
 		}
 	}
 
-	public final JSONObject getPlayerListing(final String itemUuid) {
+	public final PlayerListing getPlayerListing() {
 		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
 			final String key = "listing:" + itemUuid;
 			final String json = jedis.get(key);
-			return new JSONObject(json);
+			final JSONObject item = new JSONObject(json);
+			return new PlayerListing(
+							item.getString("playerUuid"),
+							item.getString("playerName"),
+							item.getString("itemUuid"),
+							item.getString("serializedItem"),
+							item.getString("duration"),
+							item.getInt("price")
+			);
 		}
 	}
 
-	public final void removeItemFromListing(final String itemUuid) {
+	public final JSONObject getPlayerListingToJson() {
+		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
+			ConsoleUtil.warning("itemUuid: " + itemUuid);
+			String key = "listing:" + itemUuid;
+			String json = jedis.get(key);
+			ConsoleUtil.warning("json: " + json);
+			JSONObject jsonObject = new JSONObject(json);
+			ConsoleUtil.warning("jsonObject: " + jsonObject);
+			return jsonObject;
+		}
+	}
+
+	public final void removeItemFromListing() {
 		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
 			final String key = "listing:" + itemUuid;
 			jedis.del(key);
 		}
 	}
 
-	public final Document toBson(final String itemUuid) {
-		final JSONObject jsonObject = this.getPlayerListing(itemUuid);
+	public final Document toBson() {
+		final JSONObject jsonObject = this.getPlayerListingToJson();
+		ConsoleUtil.warning("jsonObject " + jsonObject);
 		return Document.parse(jsonObject.toString());
 	}
 }

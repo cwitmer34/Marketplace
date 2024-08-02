@@ -22,7 +22,7 @@ public class Transactions implements CommandExecutor {
 			player.sendMessage(Component.text("You do not have permission to view your previous transactions!").color(NamedTextColor.RED));
 			return true;
 		}
-		List<String> transactions = TrialMarketplace.getTransactionsHandler().getTransaction(player.getUniqueId().toString()).getTransactions();
+		final List<String> transactions = TrialMarketplace.getTransactionsHandler().getTransaction(player.getUniqueId().toString()).getTransactions();
 		if (transactions.isEmpty()) {
 			player.sendMessage(GeneralUtil.prefix.append(Component.text("You have no previous transactions!").color(NamedTextColor.LIGHT_PURPLE)));
 			return true;

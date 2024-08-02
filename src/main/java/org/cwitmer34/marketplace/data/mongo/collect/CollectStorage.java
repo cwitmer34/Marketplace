@@ -6,12 +6,12 @@ import java.util.concurrent.CompletableFuture;
 public interface CollectStorage {
 
 	/**
-	 * Load the transactions from storage
+	 * Load the collects from storage
 	 *
-	 * @param transactions The transactions to load
+	 * @param collects The collects to load
 	 */
 
-	void load(final PlayerCollect transactions);
+	void load(final PlayerCollect collects);
 
 	/**
 	 * Load all player collects from storage
@@ -22,36 +22,36 @@ public interface CollectStorage {
 	CompletableFuture<List<PlayerCollect>> loadAll();
 
 	/**
-	 * Save the transactions to the players transaction history
+	 * Save the collects to the players collect history
 	 *
-	 * @param transactions The transactions to save
+	 * @param collects The collects to save
 	 */
 
-	void save(final PlayerCollect transactions);
+	void save(final PlayerCollect collects, final boolean async);
 
 	/**
-	 * Delete transaction history from a player
+	 * Delete collect history from a player
 	 *
-	 * @param transactions The transactions to delete
+	 * @param collects The collects to delete
 	 */
 
-	void delete(final PlayerCollect transactions);
+	void delete(final PlayerCollect collects);
 
 	/**
-	 * Add a transaction to the players transaction history
+	 * Add a collect to the players collect history
 	 *
-	 * @param transactions All transactions linked to a player
-	 * @param transaction  The transaction to add
+	 * @param collects All collects linked to a player
+	 * @param collect  The collect to add
 	 */
 
-	void addTransaction(final PlayerCollect transactions, final String transaction);
+	void addTransaction(final PlayerCollect collects, final String collect);
 
 	/**
-	 * Remove a transaction from the players transaction history
+	 * Remove a collect from the players collect history
 	 *
-	 * @param transactions All transactions linked to a player
-	 * @param transaction  The transaction to remove
+	 * @param collects All collects linked to a player
+	 * @param collect  The collect to remove
 	 */
 
-	void removeItem(PlayerCollect transactions, String transaction);
+	void removeItem(PlayerCollect collects, String collect);
 }

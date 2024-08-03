@@ -5,20 +5,69 @@
 mongo-uri: "mongodb://localhost:27017"
 # You can create a free redis deployment using https://railway.app/create
 redis-uri: "redis://default:AgrgBkMfQEDVQquEiTVzcSJTpEGdAtBX@viaduct.proxy.rlwy.net:26208"
-# Replace this webhook with your own, if you don't want to send logs to discord, set it to ""
-discord-webhook: "https://discord.com/api/webhooks/1268163186486411345/z_v5wT-e6QveEATDGXRgzCao1D7_ARqQbx6UwkZsEvd-gvIR1FloiXbrOKeIa5SmQ8tk"
+discord:
+  enableMessages: false
+  # replace this with your own, or disable messages
+  webhook: "https://discord.com/api/webhooks/1268163186486411345/z_v5wT-e6QveEATDGXRgzCao1D7_ARqQbx6UwkZsEvd-gvIR1FloiXbrOKeIa5SmQ8tk"
 
 general-settings:
-  prefix: "" # TODO
+  primary-color: "#00ff00" # TODO
+  secondary-color: "#ff0000" # TODO
   debug: true # if set to true, you can purchase your own listings
-  addToInvIfOnline: true # setting this to false will put the item into their player's 'collect' even if they are online
+  addToInvIfOnline: false # setting this to false will put the item into their player's 'collect' even if they are online
   minPrice: 100 # WARNING: negative values are interpreted as 0
   maxPrice: 1000000
   cooldown: 0 # in seconds
-  duration: 7d0h0m # how long you want the listing to last
+  duration: 7d0h0m0s # how long you want the listing to last
   tax: 0 # in perecent, i.e 20 = 20%
   maxListings: 5
+  maxTransactions: 10
   priceAsInteger: false
+
+command-messages:
+  noSellPermission: "&cYou do not have permission to sell items."
+  noCollectPermission: "&cYou do not have permission to collect items."
+  noViewPermission: "&cYou do not have permission to view the marketplace."
+  noBlackmarketPermission: "&cYou do not have permission to generate the blackmarket."
+  noTransactionPermission: "&cYou do not have permission to view your transaction history."
+  noCollectItems: "&cYou have no items to collect."
+  hasCollectItems: "&aYou have items to collect. Use /collect to collect them."
+  mustSpecifyPrice: "&cYou must specify a price. For example: &e/sell 100"
+  priceTooLow: "&cThe price must be at least &e%minPrice%"
+  priceTooHigh: "&cThe maximum price is &e%maxPrice%"
+  invalidItem: "&cYou must be holding the item you want to sell."
+  noTransactions: "&cYou have no transaction history."
+  itemSold: "&aYou sold %item% for &e%price%&a."
+  itemPurchased: "&aYou bought %item% for &e%price%&a."
+  moreThanMaxTransactions: "&7You have &e%totalTransactions% &7transactions, here's your past &e%maxTransactions%&7:"
+  lessThanMaxTransactions: "&7You have &e%totalTransactions% &7transactions:"
+  balanceTooLow: "&cYou do not have enough money to purchase this item."
+  alreadyPurchased: "&c%seller% has already sold %item% to someone else."
+  purchaseCancelled: "&cYou have cancelled the purchase."
+
+messages:
+  prefix: "" # TODO
+# use & for color codes, there is current support for the following placeholders:
+# %seller% - the seller's name
+# %buyer% - the buyer's name
+# %item% - the item's name
+# %price% - the price of the item
+# %duration% - the duration left on the listing
+  listings:
+    announce: true
+    announce-message: "&a&l%seller% &7has listed %item% &7for &e%price% &7on the marketplace!"
+    message: "You listed &7%item% &7for &e%price% &7on the marketplace!"
+  purchases:
+    announce: true
+    announce-message: "&a&l%buyer% &7has purchased %item% from &a&l%seller% &7for &e%price% &7on the marketplace!"
+    message: "You bought &7%item% &7for &e%price% &7from &a&l%seller%."
+buttons:
+  previous: "minecraft:red_concrete"
+  next: "minecraft:lime_concrete"
+  back: "minecraft:red_stained_glass_pane"
+  collect: "minecraft:black_concrete"
+  border: "minecraft:gray_stained_glass_pane"
+  inner-border: "minecraft:blue_stained_glass_pane"
 
 blackmarket:
   discount-amount: 50 # % amount

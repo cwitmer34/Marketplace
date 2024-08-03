@@ -17,6 +17,7 @@ public class Config {
 	// General settings
 	public static final boolean addToInvIfOnline = config.getBoolean("general-settings.addToInvIfOnline");
 	public static final int maxListings = config.getInt("general-settings.maxListings");
+	public static int maxTransactions = config.getInt("general-settings.maxTransactions"); ;
 	public static final double minPrice = config.getInt("general-settings.minPrice");
 	public static final double maxPrice = config.getInt("general-settings.maxPrice");
 	public static final int cooldown = config.getInt("general-settings.cooldown");

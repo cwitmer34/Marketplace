@@ -3,6 +3,7 @@ package org.cwitmer34.marketplace;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import lombok.Getter;
+import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bson.Document;
@@ -17,6 +18,10 @@ import org.cwitmer34.marketplace.data.mongo.collect.CollectHandler;
 import org.cwitmer34.marketplace.data.mongo.listings.ListingsHandler;
 import org.cwitmer34.marketplace.data.mongo.transactions.TransactionsHandler;
 import org.cwitmer34.marketplace.discord.DiscordWebhook;
+import org.cwitmer34.marketplace.events.customevents.ListItemEvent;
+import org.cwitmer34.marketplace.events.customevents.PurchaseItemEvent;
+import org.cwitmer34.marketplace.events.handlers.ListItemHandler;
+import org.cwitmer34.marketplace.events.handlers.PurchaseItemHandler;
 import org.cwitmer34.marketplace.guis.CollectGUI;
 import org.cwitmer34.marketplace.guis.MarketplaceGUI;
 import org.cwitmer34.marketplace.events.handlers.JoinHandler;
@@ -24,7 +29,9 @@ import org.cwitmer34.marketplace.items.guiItems.ListedItem;
 import org.cwitmer34.marketplace.data.redis.Redis;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 import org.cwitmer34.marketplace.util.GeneralUtil;
+import xyz.xenondevs.invui.item.Item;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,29 +42,26 @@ public final class TrialMarketplace extends JavaPlugin {
 	public static Economy economy = null;
 
 	@Getter
+	@Setter
+	public static List<Item> marketplaceItems = new ArrayList<>();
+	@Getter
+	public static MarketplaceGUI marketplaceGUI = new MarketplaceGUI();
+	@Getter
 	public static Mongo mongo;
-
 	@Getter
 	public static Redis redis;
-
 	@Getter
 	public static DiscordWebhook discordWebhook;
-
 	@Getter
 	public static Map<String, CollectGUI> collectGuis = new HashMap<>();
-
 	@Getter
 	public static CollectHandler collectHandler;
-
 	@Getter
 	public static TransactionsHandler transactionsHandler;
-
 	@Getter
 	public static ListingsHandler listingsHandler;
-
 	@Getter
 	public static TrialMarketplace plugin;
-
 	public static FileConfiguration config;
 
 	@Override
@@ -70,6 +74,7 @@ public final class TrialMarketplace extends JavaPlugin {
 		mongo = new Mongo();
 		redis = new Redis();
 		discordWebhook = new DiscordWebhook();
+
 		listingsHandler = new ListingsHandler();
 		collectHandler = new CollectHandler();
 		transactionsHandler = new TransactionsHandler();
@@ -95,15 +100,14 @@ public final class TrialMarketplace extends JavaPlugin {
 		}
 
 		new JoinHandler();
+		new ListItemHandler();
+		new PurchaseItemHandler();
 
 		getCommand("transactions").setExecutor(new Transactions());
 		getCommand("marketplace").setExecutor(new Marketplace());
 		getCommand("collect").setExecutor(new Collect());
 		getCommand("blackmarket").setExecutor(new Blackmarket());
 		getCommand("sell").setExecutor(new Sell());
-		getCommand("test").setExecutor(new test());
-		getCommand("mpreload").setExecutor(new MPReload());
-		getCommand("flush").setExecutor(new Flush());
 	}
 
 	private void initPlayerListings() {
@@ -123,8 +127,7 @@ public final class TrialMarketplace extends JavaPlugin {
 
 						listingsHandler.createListing(playerUuid, playerName, itemUuid, serializedItem, duration, price);
 						ItemStack itemStack = GeneralUtil.itemStackFromBase64(serializedItem);
-						MarketplaceGUI.addItem(new ListedItem(itemStack, playerName, itemUuid, price, duration));
-
+						getMarketplaceGUI().addListing(itemUuid, new ListedItem(itemStack, playerName, itemUuid, price, duration));
 					}
 				} catch (Exception e) {
 					getLogger().severe("Failed to fetch listings from MongoDB: " + e.getMessage());

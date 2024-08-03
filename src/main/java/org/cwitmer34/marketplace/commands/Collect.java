@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.data.mongo.collect.CollectHandler;
 import org.cwitmer34.marketplace.data.mongo.collect.PlayerCollect;
 import org.cwitmer34.marketplace.guis.CollectGUI;
@@ -29,32 +30,35 @@ public class Collect implements CommandExecutor {
 		if (!(sender instanceof Player player)) {
 			sender.sendMessage("Only players can use this command!");
 			return true;
+		} else if (!(player.hasPermission("marketplace.collect"))) {
+			player.sendMessage(MessageConfig.prefix + GeneralUtil.colorize(MessageConfig.noCollectPermission));
+			return true;
 		}
+
 		PlayerCollect playerCollect = TrialMarketplace.getCollectHandler().getCollect(player.getUniqueId().toString());
-		List<Item> items = deserializeItems(playerCollect.getSerializedItems());
+		List<Item> items;
+		try {
+			items = GeneralUtil.deserializeItems(playerCollect.getSerializedItems());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
 
 		if (items.isEmpty()) {
-			player.sendMessage(GeneralUtil.prefix.append(GeneralUtil.prefix.append(Component.text("You have no items to collect!")).color(NamedTextColor.LIGHT_PURPLE)));
+			player.sendMessage(MessageConfig.prefix + GeneralUtil.colorize(MessageConfig.noItemsInCollect));
 			return true;
 		}
 
 		CollectGUI collectGUI = TrialMarketplace.getCollectGuis().get(player.getUniqueId().toString());
-		collectGUI.setItems(items);
+		try {
+			collectGUI.setItems(items);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 		Window.single().setGui(collectGUI.getGui()).open(player);
 
 		return true;
 	}
 
-	public List<Item> deserializeItems(List<String> serializedItems) {
-		List<Item> items = new ArrayList<>();
-		for (String serializedItem : serializedItems) {
-			try {
-				ItemStack itemStack = GeneralUtil.itemStackFromBase64(serializedItem);
-				items.add(new CollectItem(new SimpleItem(itemStack)));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return items;
-	}
+
 }

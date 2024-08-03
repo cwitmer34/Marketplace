@@ -7,6 +7,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.config.Config;
+import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.util.GeneralUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,17 +20,25 @@ public class Transactions implements CommandExecutor {
 		if (!(sender instanceof Player player)) {
 			sender.sendMessage("Only players can use this command.");
 			return true;
-		} else if (!(player.hasPermission("marketplace.history"))) {
-			player.sendMessage(Component.text("You do not have permission to view your previous transactions!").color(NamedTextColor.RED));
+		}
+		String uuid = player.getUniqueId().toString();
+		if (!(player.hasPermission("marketplace.history"))) {
+			player.sendMessage(MessageConfig.prefix + GeneralUtil.colorize(MessageConfig.noTransactionPermission));
 			return true;
 		}
-		final List<String> transactions = TrialMarketplace.getTransactionsHandler().getTransaction(player.getUniqueId().toString()).getTransactions();
+		final List<String> transactions = TrialMarketplace.getTransactionsHandler().getTransaction(uuid).getTransactions();
 		if (transactions.isEmpty()) {
-			player.sendMessage(GeneralUtil.prefix.append(Component.text("You have no previous transactions!").color(NamedTextColor.LIGHT_PURPLE)));
+			player.sendMessage(MessageConfig.prefix + GeneralUtil.parseCommandPlaceholders(uuid, MessageConfig.noTransactions));
 			return true;
 		}
-		player.sendMessage(transactions.size() <= 10 ? "You have " + transactions.size() + " previous transactions:" : "You have more than 10 previous transactions. Here are the last 10:");
-		transactions.forEach((transaction) -> player.sendMessage("     " + transaction));
+		player.sendMessage(transactions.size() <= Config.maxTransactions
+						? GeneralUtil.parseCommandPlaceholders(uuid, MessageConfig.lessThanMaxTransactions)
+						: GeneralUtil.parseCommandPlaceholders(uuid, MessageConfig.moreThanMaxTransactions));
+
+		for (int i = 0; i < transactions.size(); i++) {
+			if (i >= Config.maxTransactions) break;
+			player.sendMessage("  " + transactions.get(i));
+		}
 		return true;
 	}
 }

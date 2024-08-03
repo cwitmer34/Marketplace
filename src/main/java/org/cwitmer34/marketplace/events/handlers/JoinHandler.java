@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.data.mongo.collect.PlayerCollect;
 import org.cwitmer34.marketplace.guis.CollectGUI;
 import org.cwitmer34.marketplace.util.GeneralUtil;
@@ -28,10 +29,7 @@ public class JoinHandler implements Listener {
 		}
 
 		if (!playerCollect.getSerializedItems().isEmpty()) {
-			player.sendMessage(GeneralUtil.prefix
-							.append(Component.text("You have item(s) in your collect! Use ").color(NamedTextColor.LIGHT_PURPLE))
-							.append(Component.text("/collect").color(NamedTextColor.YELLOW))
-							.append(Component.text(" to claim them!").color(NamedTextColor.LIGHT_PURPLE)));
+			player.sendMessage(MessageConfig.prefix + GeneralUtil.colorize(MessageConfig.hasCollectItems));
 		}
 	}
 }

@@ -5,8 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.util.ConsoleUtil;
+import org.cwitmer34.marketplace.util.GeneralUtil;
 import redis.clients.jedis.Jedis;
+import xyz.xenondevs.invui.item.Item;
 
+import java.io.IOException;
 import java.util.List;
 
 @Getter
@@ -14,15 +18,15 @@ import java.util.List;
 public class PlayerCollect {
 	private String playerUuid;
 	private String collectUuid;
-	private final List<String> serializedItems;
+	private String key;
+	private List<String> serializedItems;
 
-	public PlayerCollect(final String playerUuid, final String collectUuid, final List<String> serializedItems) {
+	public PlayerCollect(String playerUuid, String collectUuid, List<String> serializedItems) {
 		this.playerUuid = playerUuid;
 		this.collectUuid = collectUuid;
+		this.key = "collect:" + playerUuid;
 		this.serializedItems = serializedItems;
 	}
-
-	private final String key = "collect:" + playerUuid;
 
 	public void setSerializedItems(final List<String> serializedItems) {
 		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
@@ -34,13 +38,19 @@ public class PlayerCollect {
 
 	public void addSerializedItem(final String item) {
 		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
+			ConsoleUtil.warning("Adding item to player collect: " + key);
 			jedis.rpush(key, item);
 		}
 	}
 
 	public final void removeSerializedItem(final String item) {
 		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
-			jedis.lrem(key, 0, item);
+			String item1 = getSerializedItem(item);
+			jedis.lrem(key, 1, item1);
+			List<Item> items = GeneralUtil.deserializeItems(this.getSerializedItems());
+			TrialMarketplace.getCollectGuis().get(playerUuid).setItems(items);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 

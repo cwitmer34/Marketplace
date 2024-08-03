@@ -6,21 +6,22 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
+import org.cwitmer34.marketplace.data.mongo.listings.PlayerListing;
 import org.jetbrains.annotations.NotNull;
 
-public class PurchaseItemEvent extends Event  {
+public class PurchaseItemEvent extends Event {
 	private static final HandlerList HANDLERS = new HandlerList();
 	@Getter
-	private final Player player;
+	private final Player buyer;
 	@Getter
 	private final ItemStack item;
 	@Getter
-	private final int price;
+	private final PlayerListing listing;
 
-	public PurchaseItemEvent(Player player, ItemStack item, int price) {
-		this.player = player;
+	public PurchaseItemEvent(Player buyer, ItemStack item, PlayerListing listing) {
+		this.buyer = buyer;
 		this.item = item;
-		this.price = price;
+		this.listing = listing;
 	}
 
 	public static HandlerList getHandlerList() {

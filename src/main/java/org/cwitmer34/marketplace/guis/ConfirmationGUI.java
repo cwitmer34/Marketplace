@@ -7,7 +7,7 @@ import xyz.xenondevs.invui.item.Item;
 
 public class ConfirmationGUI {
 
-	public static Gui create(Item itemToSell, String sellerName, String itemUuid, int price, ItemStack originalItem) {
+	public static Gui create(Item itemToSell, String sellerName, String itemUuid, int price, ItemStack originalItem, int clickedSlot) {
 		return Gui.normal()
 						.setStructure(
 										"< < < < o > > > >",
@@ -18,7 +18,7 @@ public class ConfirmationGUI {
 										"< < < < o > > > >")
 						.addIngredient('<', new CancelItem())
 						.addIngredient('o', itemToSell)
-						.addIngredient('>', new ConfirmItem(itemToSell, sellerName, itemUuid, price, originalItem))
+						.addIngredient('>', new ConfirmItem(itemToSell, sellerName, itemUuid, price, originalItem, clickedSlot))
 						.build();
 
 	}

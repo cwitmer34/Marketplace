@@ -7,6 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.config.ButtonsConfig;
 import org.cwitmer34.marketplace.guis.MarketplaceGUI;
 import org.cwitmer34.marketplace.util.GeneralUtil;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +21,7 @@ import xyz.xenondevs.invui.window.Window;
 
 public class BackToMarketItem extends AbstractItem {
 
-	private final Item item = new SimpleItem(new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setDisplayName("§cBack to Market").addLoreLines("§7Click to return to the marketplace"));
+	private final Item item = new SimpleItem(new ItemBuilder(ButtonsConfig.BACK).setDisplayName("§cBack to Market").addLoreLines("§7Click to return to the marketplace"));
 
 	@Override
 	public ItemProvider getItemProvider() {
@@ -31,7 +33,7 @@ public class BackToMarketItem extends AbstractItem {
 		if (!clickType.isLeftClick()) return;
 		Window.single()
 						.setTitle("Marketplace")
-						.setGui(MarketplaceGUI.getGui())
+						.setGui(TrialMarketplace.getMarketplaceGUI().getGui())
 						.open(player);
 	}
 }

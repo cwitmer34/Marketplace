@@ -36,10 +36,10 @@ public class ListingsHandler {
 	public void syncListings() {
 		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
 			final Set<String> keys = jedis.keys("listing:*");
-			if(keys.isEmpty()) {
+			TrialMarketplace.getMongo().getListings().drop();
+			if (keys.isEmpty()) {
 				return;
 			}
-			TrialMarketplace.getMongo().getListings().drop();
 			for (final String key : keys) {
 				final String value = jedis.get(key);
 				if (value == null) {
@@ -47,12 +47,12 @@ public class ListingsHandler {
 				}
 				final JSONObject json = new JSONObject(value);
 				final PlayerListing listing = new PlayerListing(
-					json.getString("playerUuid"),
-					json.getString("playerName"),
-					json.getString("itemUuid"),
-					json.getString("serializedItem"),
-					json.getString("duration"),
-					json.getInt("price")
+								json.getString("playerUuid"),
+								json.getString("playerName"),
+								json.getString("itemUuid"),
+								json.getString("serializedItem"),
+								json.getString("duration"),
+								json.getInt("price")
 				);
 				ConsoleUtil.info("PlayerListing: " + listing);
 				this.listingsStorage.save(listing, false);
@@ -69,12 +69,12 @@ public class ListingsHandler {
 			for (final PlayerListing listing : listings) {
 				ConsoleUtil.info(String.valueOf(listing));
 				final PlayerListing playerListing = new PlayerListing(
-					listing.getPlayerUuid(),
-					listing.getPlayerName(),
-					listing.getItemUuid(),
-					listing.getSerializedItem(),
-					listing.getDuration(),
-					listing.getPrice()
+								listing.getPlayerUuid(),
+								listing.getPlayerName(),
+								listing.getItemUuid(),
+								listing.getSerializedItem(),
+								listing.getDuration(),
+								listing.getPrice()
 				);
 				playerListing.setPlayerListing();
 				this.listings.put(listing.getItemUuid(), playerListing);

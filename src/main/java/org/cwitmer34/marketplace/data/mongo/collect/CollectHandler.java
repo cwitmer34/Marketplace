@@ -42,28 +42,33 @@ public class CollectHandler {
 		final PlayerCollect collect = getOrCreateCollect(playerUuid);
 
 		if (collect != null) {
-			ConsoleUtil.info("Adding collect item to player: " + playerUuid);
+			ConsoleUtil.info("Adding collect item to player: " + collect.getPlayerUuid());
 			collect.addSerializedItem(serializedItem);
 		}
 	}
 
 	public void removeItem(final String playerUuid, final String serializedItem) {
-		final PlayerCollect collect = getOrCreateCollect(playerUuid);
+		PlayerCollect collect = getOrCreateCollect(playerUuid);
 
-		if(collect != null && collect.hasSerializedItem(serializedItem)) {
-			ConsoleUtil.info("Removing collect item from player: " + playerUuid);
-			collect.removeSerializedItem(serializedItem);
-			return;
+		if (collect != null && collect.hasSerializedItem(serializedItem)) {
+			try {
+				ConsoleUtil.info("Removing collect item from player: " + playerUuid);
+				collect.getSerializedItems().forEach(ConsoleUtil::warning);
+				collect.removeSerializedItem(serializedItem);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
-		ConsoleUtil.info("Failed to remove item: " + serializedItem + " from player's collect - item not found");
 	}
 
 	public void syncCollects() {
 		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
 			final Set<String> keys = jedis.keys("collect:*");
 			keys.forEach(ConsoleUtil::warning);
-			if(keys.isEmpty()) {
+			TrialMarketplace.getMongo().getCollect().drop();
+			if (keys.isEmpty()) {
 				return;
 			}
 

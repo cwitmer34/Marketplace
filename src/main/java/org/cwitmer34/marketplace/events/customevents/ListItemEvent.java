@@ -5,21 +5,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
+import org.cwitmer34.marketplace.data.mongo.listings.PlayerListing;
 import org.jetbrains.annotations.NotNull;
 
-public class ListItemEvent extends Event  {
+@Getter
+public class ListItemEvent extends Event {
 	private static final HandlerList HANDLERS = new HandlerList();
-	@Getter
 	private final Player player;
-	@Getter
-	private final ItemStack item;
-	@Getter
-	private final int price;
+	private final ItemStack itemStack;
+	private final PlayerListing listing;
 
-	public ListItemEvent(Player player, ItemStack item, int price) {
+	public ListItemEvent(Player player, ItemStack itemStack, PlayerListing listing) {
 		this.player = player;
-		this.item = item;
-		this.price = price;
+		this.itemStack = itemStack;
+		this.listing = listing;
 	}
 
 	public static HandlerList getHandlerList() {

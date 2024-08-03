@@ -6,6 +6,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.cwitmer34.marketplace.config.MessageConfig;
+import org.cwitmer34.marketplace.util.GeneralUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class Blackmarket implements CommandExecutor {
@@ -15,7 +17,7 @@ public class Blackmarket implements CommandExecutor {
 			sender.sendMessage("Only players can use this command.");
 			return true;
 		} else if (!(player.hasPermission("marketplace.blackmarket"))) {
-			player.sendMessage(Component.text("You do not have permission to generate the blackmarket!").color(NamedTextColor.RED));
+			player.sendMessage(MessageConfig.prefix + GeneralUtil.colorize(MessageConfig.noBlackmarketPermission));
 			return true;
 		}
 

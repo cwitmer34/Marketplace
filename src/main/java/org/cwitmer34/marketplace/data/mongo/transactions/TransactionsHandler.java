@@ -30,7 +30,7 @@ public class TransactionsHandler {
 	public PlayerTransactions getTransaction(String uuid) {
 		PlayerTransactions playerTransactions = transactions.get(uuid);
 
-		if(playerTransactions == null) {
+		if (playerTransactions == null) {
 			createTransaction(uuid, List.of());
 			playerTransactions = transactions.get(uuid);
 		}
@@ -47,8 +47,16 @@ public class TransactionsHandler {
 			return;
 		}
 		PlayerTransactions transaction = transactions.get(uuid);
+		ConsoleUtil.warning("Adding transaction to player: " + uuid);
+		ConsoleUtil.warning("Transaction: " + log);
 		List<String> logs = transaction.getTransactions();
-		logs.add(log);
+		logs.forEach(ConsoleUtil::warning);
+		try {
+			logs.addFirst(log);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		logs.forEach(ConsoleUtil::warning);
 		transaction.setTransactions(logs);
 		transactionsStorage.save(transaction);
 	}

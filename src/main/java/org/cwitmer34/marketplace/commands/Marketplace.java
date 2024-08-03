@@ -7,7 +7,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.guis.MarketplaceGUI;
+import org.cwitmer34.marketplace.util.GeneralUtil;
 import org.jetbrains.annotations.NotNull;
 import xyz.xenondevs.invui.item.Item;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
@@ -21,15 +24,14 @@ public class Marketplace implements CommandExecutor {
 			sender.sendMessage("Only players can use this command.");
 			return true;
 		} else if (!(player.hasPermission("marketplace.view"))) {
-			player.sendMessage(Component.text("You do not have permission to view the marketplace!").color(NamedTextColor.RED));
+			player.sendMessage(MessageConfig.prefix + GeneralUtil.colorize(MessageConfig.noViewPermission));
 			return true;
 		}
-		Item border = new SimpleItem(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setDisplayName("§r"));
 
 		Window window = Window.single()
 						.setViewer(player)
 						.setTitle("Marketplace")
-						.setGui(MarketplaceGUI.getGui())
+						.setGui(TrialMarketplace.getMarketplaceGUI().getGui())
 						.build();
 
 		window.open();

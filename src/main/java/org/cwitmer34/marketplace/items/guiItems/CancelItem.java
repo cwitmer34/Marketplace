@@ -7,6 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.guis.MarketplaceGUI;
 import org.cwitmer34.marketplace.util.GeneralUtil;
 import org.jetbrains.annotations.NotNull;
@@ -29,10 +31,10 @@ public class CancelItem extends AbstractItem {
 	@Override
 	public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent inventoryClickEvent) {
 		if (!clickType.isLeftClick()) return;
-		player.sendMessage(GeneralUtil.prefix.append(Component.text("You cancelled your purchase").color(NamedTextColor.GREEN)));
+		player.sendMessage(MessageConfig.prefix + GeneralUtil.colorize(MessageConfig.purchaseCancelled));
 		Window.single()
 						.setTitle("Marketplace")
-						.setGui(MarketplaceGUI.getGui())
+						.setGui(TrialMarketplace.getMarketplaceGUI().getGui())
 						.open(player);
 	}
 }

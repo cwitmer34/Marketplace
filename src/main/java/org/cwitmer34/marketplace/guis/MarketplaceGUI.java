@@ -1,14 +1,14 @@
 package org.cwitmer34.marketplace.guis;
 
-import com.google.common.cache.AbstractCache;
 import lombok.Getter;
 import lombok.Setter;
+import org.cwitmer34.marketplace.config.ButtonsConfig;
 import org.cwitmer34.marketplace.items.guiItems.*;
-import org.cwitmer34.marketplace.util.ConsoleUtil;
 import xyz.xenondevs.invui.gui.Gui;
 import xyz.xenondevs.invui.gui.PagedGui;
 import xyz.xenondevs.invui.gui.structure.Markers;
 import xyz.xenondevs.invui.item.Item;
+import xyz.xenondevs.invui.item.impl.SimpleItem;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,11 +30,11 @@ public class MarketplaceGUI {
 									"# x x x x x x x #",
 									"# x x x x x x x #",
 									"# # # < o > # # #")
-					.addIngredient('#', MiscItems.border)
+					.addIngredient('#', new BorderItem())
 					.addIngredient('x', Markers.CONTENT_LIST_SLOT_HORIZONTAL)
-					.addIngredient('<', new BackItem())
-					.addIngredient('o', new ListingsItem())
-					.addIngredient('>', new ForwardItem())
+					.addIngredient('<', new PreviousPageItem())
+					.addIngredient('o', new GoToCollectItem())
+					.addIngredient('>', new NextPageItem())
 					.build();
 
 	public void removeListing(String itemUuid) throws IOException {

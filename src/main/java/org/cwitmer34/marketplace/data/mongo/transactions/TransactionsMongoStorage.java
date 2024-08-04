@@ -35,7 +35,7 @@ public class TransactionsMongoStorage implements TransactionsStorage {
 					TrialMarketplace.getMongo().getTransactions().insertOne(transactions.toBson());
 					return;
 				}
-				TrialMarketplace.getMongo().getTransactions().replaceOne(document, transactions.toBson(), new ReplaceOptions().upsert(true));
+				TrialMarketplace.getMongo().getTransactions().replaceOne(document, transactions.toBson());
 			}
 		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
 

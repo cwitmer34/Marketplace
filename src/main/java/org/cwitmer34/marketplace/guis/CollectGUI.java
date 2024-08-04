@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.bukkit.inventory.ItemStack;
+import org.cwitmer34.marketplace.config.ButtonsConfig;
 import org.cwitmer34.marketplace.items.guiItems.*;
 import org.cwitmer34.marketplace.util.GeneralUtil;
 import xyz.xenondevs.invui.gui.AbstractGui;
@@ -26,8 +27,8 @@ public class CollectGUI {
 									"# . x x x x x . #",
 									"# . . . . . . . #",
 									"# # # # # # # # #")
-					.addIngredient('#', MiscItems.border)
-					.addIngredient('.', MiscItems.filler)
+					.addIngredient('#', new BorderItem())
+					.addIngredient('.', new InnerBorderItem())
 					.addIngredient('<', new BackToMarketItem())
 					.addIngredient('x', Markers.CONTENT_LIST_SLOT_HORIZONTAL)
 					.build();

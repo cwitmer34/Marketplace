@@ -28,13 +28,11 @@ public class Marketplace implements CommandExecutor {
 			return true;
 		}
 
-		Window window = Window.single()
-						.setViewer(player)
+		Window.single()
 						.setTitle("Marketplace")
 						.setGui(TrialMarketplace.getMarketplaceGUI().getGui())
-						.build();
+						.open(player);
 
-		window.open();
 		return true;
 	}
 }

@@ -12,6 +12,9 @@ import java.util.List;
 public class Config {
 	private static FileConfiguration config = TrialMarketplace.getPlugin().getConfig();
 
+	@Getter
+	private static ButtonsConfig buttonsConfig = new ButtonsConfig();
+
 	public static final String discordWebhook = config.getString("discord-webhook");
 
 	// General settings

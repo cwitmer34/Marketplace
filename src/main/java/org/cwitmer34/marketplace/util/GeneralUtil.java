@@ -1,8 +1,6 @@
 package org.cwitmer34.marketplace.util;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -13,6 +11,7 @@ import org.cwitmer34.marketplace.TrialMarketplace;
 import org.cwitmer34.marketplace.config.Config;
 import org.cwitmer34.marketplace.data.mongo.listings.PlayerListing;
 import org.cwitmer34.marketplace.items.guiItems.CollectItem;
+import org.cwitmer34.marketplace.items.guiItems.GoToCollectItem;
 import xyz.xenondevs.invui.item.Item;
 import xyz.xenondevs.invui.item.impl.SimpleItem;
 

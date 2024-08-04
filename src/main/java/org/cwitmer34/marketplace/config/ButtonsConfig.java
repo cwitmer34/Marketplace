@@ -1,30 +1,47 @@
 package org.cwitmer34.marketplace.config;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.configuration.ConfigurationSection;
 import org.cwitmer34.marketplace.TrialMarketplace;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 
+import java.util.Objects;
+
 public class ButtonsConfig {
-	private static FileConfiguration config = TrialMarketplace.config;
-	public static final ItemStack PREVIOUS = checkItem(config.getString("buttons.previous"));
-	public static final ItemStack NEXT = checkItem(config.getString("buttons.next"));
-	public static final ItemStack BACK = checkItem(config.getString("buttons.back"));
-	public static final ItemStack COLLECT = checkItem(config.getString("buttons.collect"));
-	public static final ItemStack BORDER = checkItem(config.getString("buttons.background"));
-	public static final ItemStack INNER_BORDER = checkItem(config.getString("buttons.inner-border"));
+	public static Material PREVIOUS = Material.RED_CONCRETE;
+	public static Material NEXT = Material.LIME_CONCRETE;
+	public static Material INNER_BORDER = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+	public static Material BORDER = Material.BLACK_STAINED_GLASS_PANE;
+	public static Material CONFIRM = Material.LIME_STAINED_GLASS_PANE;
+	public static Material BACK = Material.RED_STAINED_GLASS_PANE;
+	public static Material COLLECT = Material.BLACK_CONCRETE;
 
+	public static void loadConfig() {
+		PREVIOUS = getMaterial("previous", PREVIOUS);
+		NEXT = getMaterial("next", NEXT);
+		COLLECT = getMaterial("collect", COLLECT);
+		INNER_BORDER = getMaterial("inner-border", INNER_BORDER);
+		BORDER = getMaterial("border", BORDER);
+		CONFIRM = getMaterial("confirm", CONFIRM);
+		BACK = getMaterial("back", BACK);
 
-	private static ItemStack checkItem(String path) {
-		Material material = Material.matchMaterial(path);
-		if (material == null) {
-			ConsoleUtil.severe("Invalid material: " + path);
-			ConsoleUtil.severe("Disabling plugin...");
-			TrialMarketplace.getPlugin().getServer().getPluginManager().disablePlugin(TrialMarketplace.getPlugin());
-			return null;
-		}
-		return new ItemStack(material);
 	}
 
+	private static Material getMaterial(String key, Material defaultValue) {
+		ConfigurationSection section = TrialMarketplace.getPlugin().getConfig().getConfigurationSection("buttons");
+		assert section != null;
+		String value = section.getString(key);
+		if (value != null) {
+			try {
+				Material material = Material.matchMaterial(value);
+				if (material != null) {
+					return material;
+				}
+				return Material.valueOf(value);
+			} catch (IllegalArgumentException e) {
+				ConsoleUtil.severe("Invalid material for key: " + key + "(" + value + ")" + ", using default: " + defaultValue);
+			}
+		}
+		return defaultValue;
+	}
 }

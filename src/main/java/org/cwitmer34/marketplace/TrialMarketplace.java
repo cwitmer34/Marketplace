@@ -13,6 +13,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.cwitmer34.marketplace.commands.*;
+import org.cwitmer34.marketplace.config.ButtonsConfig;
 import org.cwitmer34.marketplace.data.mongo.Mongo;
 import org.cwitmer34.marketplace.data.mongo.collect.CollectHandler;
 import org.cwitmer34.marketplace.data.mongo.listings.ListingsHandler;
@@ -70,6 +71,7 @@ public final class TrialMarketplace extends JavaPlugin {
 		plugin = this;
 		saveDefaultConfig();
 		config = getConfig();
+		ButtonsConfig.loadConfig();
 
 		mongo = new Mongo();
 		redis = new Redis();

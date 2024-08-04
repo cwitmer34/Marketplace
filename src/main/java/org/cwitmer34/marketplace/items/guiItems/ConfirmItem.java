@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.config.ButtonsConfig;
 import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.data.mongo.listings.PlayerListing;
 import org.cwitmer34.marketplace.events.customevents.PurchaseItemEvent;
@@ -28,13 +29,14 @@ import xyz.xenondevs.invui.item.impl.SimpleItem;
 import xyz.xenondevs.invui.window.Window;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ConfirmItem extends AbstractItem {
 	Item itemToSell;
 	int clickedSlot;
 	String itemUuid;
 	String sellerName;
-	Item item = new SimpleItem(new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE).setDisplayName("§aConfirm").addLoreLines("§7Click to confirm your purchase"));
+	Item item = new SimpleItem(new ItemBuilder(ButtonsConfig.CONFIRM).setDisplayName("§aConfirm").addLoreLines("§7Click to confirm your purchase"));
 	ItemStack itemStack;
 	ItemStack originalItem;
 

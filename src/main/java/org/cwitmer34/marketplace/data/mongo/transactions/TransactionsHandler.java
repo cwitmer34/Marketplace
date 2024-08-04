@@ -49,15 +49,7 @@ public class TransactionsHandler {
 		PlayerTransactions transaction = transactions.get(uuid);
 		ConsoleUtil.warning("Adding transaction to player: " + uuid);
 		ConsoleUtil.warning("Transaction: " + log);
-		List<String> logs = transaction.getTransactions();
-		logs.forEach(ConsoleUtil::warning);
-		try {
-			logs.addFirst(log);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		logs.forEach(ConsoleUtil::warning);
-		transaction.setTransactions(logs);
+		transaction.getTransactions().addFirst(log);
 		transactionsStorage.save(transaction);
 	}
 

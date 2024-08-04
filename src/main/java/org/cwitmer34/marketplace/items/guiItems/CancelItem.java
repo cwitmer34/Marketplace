@@ -7,7 +7,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.config.ButtonsConfig;
+import org.cwitmer34.marketplace.config.Config;
 import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.guis.MarketplaceGUI;
 import org.cwitmer34.marketplace.util.GeneralUtil;
@@ -19,9 +22,11 @@ import xyz.xenondevs.invui.item.impl.AbstractItem;
 import xyz.xenondevs.invui.item.impl.SimpleItem;
 import xyz.xenondevs.invui.window.Window;
 
+import java.util.Objects;
+
 public class CancelItem extends AbstractItem {
 
-	private final Item cancel = new SimpleItem(new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setDisplayName("§cCancel").addLoreLines("§7Click to cancel your purchase"));
+	private final Item cancel = new SimpleItem(new ItemBuilder(ButtonsConfig.BACK).setDisplayName("§cCancel").addLoreLines("§7Click to return to the marketplace"));
 
 	@Override
 	public ItemProvider getItemProvider() {

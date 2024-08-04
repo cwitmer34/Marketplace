@@ -47,12 +47,12 @@ command-messages:
 
 messages:
   prefix: "" # TODO
-# use & for color codes, there is current support for the following placeholders:
-# %seller% - the seller's name
-# %buyer% - the buyer's name
-# %item% - the item's name
-# %price% - the price of the item
-# %duration% - the duration left on the listing
+  # use & for color codes, there is current support for the following placeholders:
+  # %seller% - the seller's name
+  # %buyer% - the buyer's name
+  # %item% - the item's name
+  # %price% - the price of the item
+  # %duration% - the duration left on the listing
   listings:
     announce: true
     announce-message: "&a&l%seller% &7has listed %item% &7for &e%price% &7on the marketplace!"
@@ -61,13 +61,16 @@ messages:
     announce: true
     announce-message: "&a&l%buyer% &7has purchased %item% from &a&l%seller% &7for &e%price% &7on the marketplace!"
     message: "You bought &7%item% &7for &e%price% &7from &a&l%seller%."
+
+# You can use any material name from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 buttons:
-  previous: "minecraft:red_concrete"
-  next: "minecraft:lime_concrete"
-  back: "minecraft:red_stained_glass_pane"
-  collect: "minecraft:black_concrete"
-  border: "minecraft:gray_stained_glass_pane"
-  inner-border: "minecraft:blue_stained_glass_pane"
+  previous: "RED_CONCRETE"
+  next: "LIME_CONCRETE"
+  confirm: "LIME_STAINED_GLASS_PANE"
+  back: "RED_STAINED_GLASS_PANE"
+  collect: "BLACK_CONCRETE"
+  border: "BLACK_STAINED_GLASS_PANE"
+  inner-border: "LIGHT_BLUE_STAINED_GLASS_PANE"
 
 blackmarket:
   discount-amount: 50 # % amount

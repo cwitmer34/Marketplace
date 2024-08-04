@@ -13,9 +13,11 @@ import xyz.xenondevs.invui.item.impl.AbstractItem;
 
 public class CollectItem extends AbstractItem {
 	Item item;
+	ItemStack originalItem;
 
-	public CollectItem(Item item) {
+	public CollectItem(Item item, ItemStack originalItem) {
 		this.item = item;
+		this.originalItem = originalItem;
 	}
 
 	@Override
@@ -26,7 +28,11 @@ public class CollectItem extends AbstractItem {
 	@Override
 	public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent inventoryClickEvent) {
 		if (!clickType.isLeftClick()) return;
-		player.getInventory().addItem(item.getItemProvider().get());
-		TrialMarketplace.getCollectHandler().removeItem(player.getUniqueId().toString(), GeneralUtil.itemStackToBase64(item.getItemProvider().get()));
+		try {
+			TrialMarketplace.getCollectHandler().removeItem(player.getUniqueId().toString(), GeneralUtil.itemStackToBase64(originalItem));
+			player.getInventory().addItem(originalItem);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

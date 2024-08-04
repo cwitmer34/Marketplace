@@ -38,7 +38,7 @@ public class GeneralUtil {
 		List<Item> items = new ArrayList<>();
 		for (String serializedItem : serializedItems) {
 			ItemStack itemStack = GeneralUtil.itemStackFromBase64(serializedItem);
-			items.add(new CollectItem(new SimpleItem(itemStack)));
+			items.add(new CollectItem(new SimpleItem(itemStack), itemStack));
 		}
 		return items;
 	}

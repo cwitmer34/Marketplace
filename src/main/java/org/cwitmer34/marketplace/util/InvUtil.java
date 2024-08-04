@@ -5,7 +5,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.cwitmer34.marketplace.TrialMarketplace;
 
-public class CollectUtil {
+public class InvUtil {
 	public static void giveUnlessFullInv(final Player player, final ItemStack itemStack) {
 		Inventory inv = player.getInventory();
 		for (ItemStack item : inv.getContents()) {
@@ -17,7 +17,7 @@ public class CollectUtil {
 		}
 	}
 
-	public static void add(final String playerUuid, final ItemStack originalItem) {
+	public static void addToCollect(final String playerUuid, final ItemStack originalItem) {
 		final String serializedItem = GeneralUtil.itemStackToBase64(originalItem);
 		TrialMarketplace.getCollectHandler().addItem(playerUuid, serializedItem);
 	}

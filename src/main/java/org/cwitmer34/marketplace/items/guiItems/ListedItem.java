@@ -96,7 +96,6 @@ public class ListedItem extends AbstractItem {
 				setDuration(GeneralUtil.decrementDuration(duration));
 				listing.setDuration(duration);
 				listing.setPlayerListing();
-				ConsoleUtil.info(listing.getDuration());
 				TrialMarketplace.getMarketplaceGUI().updateListings();
 			}
 		}.runTaskTimerAsynchronously(TrialMarketplace.getPlugin(), 0, 20);

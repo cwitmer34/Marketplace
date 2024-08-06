@@ -2,20 +2,19 @@ package org.cwitmer34.marketplace.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.util.GeneralUtil;
+
+import java.util.Objects;
 
 public class MessageConfig {
 	private static FileConfiguration config = TrialMarketplace.config;
-
-	public static String prefix = config.getString("messages.prefix");
-
+	public static String prefix = GeneralUtil.colorize(Objects.requireNonNullElse(config.getString("messages.prefix"), "&7[&6Marketplace&7] "));
 	public static boolean announcePurchases = config.getBoolean("messages.purchases.announce");
 	public static String purchaseAnnounce = config.getString("messages.purchases.announce-message");
 	public static String purchaseMessage = config.getString("messages.purchases.message");
-
 	public static boolean announceListings = config.getBoolean("messages.listings.announce");
 	public static String listingAnnounce = config.getString("messages.listings.announce-message");
 	public static String listingMessage = config.getString("messages.listings.message");
-
 	public static String noSellPermission = config.getString("command-messages.noSellPermission");
 	public static String noCollectPermission = config.getString("command-messages.noCollectPermission");
 	public static String noViewPermission = config.getString("command-messages.noViewPermission");
@@ -35,10 +34,7 @@ public class MessageConfig {
 	public static String purchaseCancelled = config.getString("command-messages.purchaseCancelled");
 	public static String itemSold = config.getString("command-messages.itemSold");
 	public static String itemPurchased = config.getString("command-messages.itemPurchased");
-
 	public static String noRefreshPermission = config.getString("blackmarket.noRefreshPermission");
-
-
 	public static boolean enableDiscordWebhook = config.getBoolean("discord.enableMessages");
 	public static String discordWebhook = config.getString("discord.webhook");
 }

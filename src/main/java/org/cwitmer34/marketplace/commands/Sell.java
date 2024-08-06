@@ -50,6 +50,7 @@ public class Sell implements CommandExecutor {
 
 		int sellPrice = Integer.parseInt(args[0]);
 		ItemStack itemStack = player.getInventory().getItemInMainHand();
+		player.getInventory().setItemInMainHand(null);
 		String itemUuid = UUID.randomUUID().toString();
 		TrialMarketplace.getListingsHandler().createListing(player.getUniqueId().toString(), player.getName(), itemUuid, GeneralUtil.itemStackToBase64(itemStack), Config.duration, sellPrice);
 		Item item = new ListedItem(itemStack, player.getName(), itemUuid, sellPrice, Config.duration);

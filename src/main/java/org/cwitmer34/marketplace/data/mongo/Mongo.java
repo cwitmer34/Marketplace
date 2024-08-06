@@ -43,12 +43,12 @@ public class Mongo {
 			this.client = MongoClients.create(settings);
 			this.database = client.getDatabase("Marketplace");
 			this.initCollections();
-		} catch (MongoException e) {
+		} catch (Exception e) {
+			ConsoleUtil.severe(e.getMessage());
 			ConsoleUtil.severe("Failed to connect to MongoDB. Please ensure your MongoDB URI is valid.");
 			ConsoleUtil.severe("Disabling plugin...");
 			TrialMarketplace.getPlugin().getServer().getPluginManager().disablePlugin(TrialMarketplace.getPlugin());
 		}
-
 	}
 
 	private void initCollections() {

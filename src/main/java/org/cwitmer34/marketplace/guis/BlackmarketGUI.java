@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.cwitmer34.marketplace.TrialMarketplace;
 import org.cwitmer34.marketplace.config.BMConfig;
+import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.data.mongo.listings.PlayerListing;
 import org.cwitmer34.marketplace.items.guiItems.*;
 import org.cwitmer34.marketplace.util.GeneralUtil;
@@ -73,7 +74,7 @@ public class BlackmarketGUI {
 				updateItems();
 
 				if (BMConfig.announce) {
-					Bukkit.broadcastMessage(GeneralUtil.colorize(BMConfig.announceMessage));
+					Bukkit.broadcastMessage(MessageConfig.prefix + GeneralUtil.colorize(BMConfig.announceMessage));
 				}
 			}
 		}.runTaskTimerAsynchronously(TrialMarketplace.getPlugin(), 0, BMConfig.refreshRate * 20 * 60).getTaskId();

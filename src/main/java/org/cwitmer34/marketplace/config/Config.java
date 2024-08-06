@@ -7,6 +7,7 @@ import org.cwitmer34.marketplace.TrialMarketplace;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 public class Config {
@@ -16,14 +17,11 @@ public class Config {
 
 	// General settings
 	public static final boolean addToInvIfOnline = config.getBoolean("general-settings.addToInvIfOnline");
-	public static final int maxListings = config.getInt("general-settings.maxListings");
 	public static int maxTransactions = config.getInt("general-settings.maxTransactions");
-	;
-	public static final double minPrice = config.getInt("general-settings.minPrice");
-	public static final double maxPrice = config.getInt("general-settings.maxPrice");
-	public static final String duration = config.getString("general-settings.duration");
-	public static final int tax = config.getInt("general-settings.tax");
+	public static final double minPrice = Math.max(config.getInt("general-settings.minPrice"), 1);
+	public static final double maxPrice = Math.min(config.getInt("general-settings.maxPrice"), Integer.MAX_VALUE);
+	public static final String duration = Objects.requireNonNullElse(config.getString("general-settings.duration"), "7d0h0m0s") ;
 
 	@Getter
-	private static final List<Object> settings = new ArrayList<>(List.of(addToInvIfOnline, maxListings, minPrice, maxPrice, duration, tax));
+	private static final List<Object> settings = List.of(addToInvIfOnline, minPrice, maxPrice, duration);
 }

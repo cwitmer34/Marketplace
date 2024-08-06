@@ -1,19 +1,21 @@
 package org.cwitmer34.marketplace.util;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.config.Config;
+import org.cwitmer34.marketplace.config.MessageConfig;
 
 public class InvUtil {
 	public static void giveUnlessFullInv(final Player player, final ItemStack itemStack) {
-		Inventory inv = player.getInventory();
-		for (ItemStack item : inv.getContents()) {
-			if (item == null) {
-				inv.addItem(itemStack);
-				break;
-			} else player.sendMessage("Your inventory is full!");
-
+		if (player.getInventory().firstEmpty() == -1) {
+			player.sendMessage(Component.text(MessageConfig.prefix + "Your inventory is full! Item has been added to your collect.").color(NamedTextColor.RED));
+			addToCollect(player.getUniqueId().toString(), itemStack);
+		} else {
+			player.getInventory().addItem(itemStack);
 		}
 	}
 

@@ -11,15 +11,10 @@ discord:
   webhook: "https://discord.com/api/webhooks/1268163186486411345/z_v5wT-e6QveEATDGXRgzCao1D7_ARqQbx6UwkZsEvd-gvIR1FloiXbrOKeIa5SmQ8tk"
 
 general-settings:
-  primary-color: "#00ff00" # TODO
-  secondary-color: "#ff0000" # TODO
-  debug: true # if set to true, you can purchase your own listings
-  addToInvIfOnline: false # setting this to false will put the item into their player's 'collect' even if they are online
+  addToInvIfOnline: true # setting this to false will put the item into their player's 'collect' even if they are online
   minPrice: 100 # WARNING: negative values are interpreted as 0
-  maxPrice: 1000000
+  maxPrice: 10000000
   duration: 7d0h0m0s # how long you want the listing to last
-  tax: 0 # in perecent, i.e 20 = 20%
-  maxListings: 5
   maxTransactions: 10
 
 command-messages:
@@ -44,19 +39,13 @@ command-messages:
   purchaseCancelled: "&cYou have cancelled the purchase."
 
 messages:
-  prefix: "" # TODO
-  # use & for color codes, there is current support for the following placeholders:
-  # %seller% - the seller's name
-  # %buyer% - the buyer's name
-  # %item% - the item's name
-  # %price% - the price of the item
-  # %duration% - the duration left on the listing
+  prefix: "&7[&eMarketplace&7] &r"
   listings:
-    announce: true
+    announce: false
     announce-message: "&a&l%seller% &7has listed %item% &7for &e%price% &7on the marketplace!"
     message: "You listed &7%item% &7for &e%price% &7on the marketplace!"
   purchases:
-    announce: true
+    announce: false
     announce-message: "&a&l%buyer% &7has purchased %item% from &a&l%seller% &7for &e%price% &7on the marketplace!"
     message: "You bought &7%item% &7for &e%price% &7from &a&l%seller%."
 
@@ -73,7 +62,7 @@ buttons:
 
 blackmarket:
   discount-amount: 50 # % amount
-  amountOfItems: 9 # max amount is 10
+  amountOfItems: 10 # max amount is 10
   refreshRate: 1 # the amount of minutes before the blackmarket refreshes
   announce: true
-  announce-message: "&7The blackmarket has started!"
+  announce-message: "&7The blackmarket has been refreshed!"

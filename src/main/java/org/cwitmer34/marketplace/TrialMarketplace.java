@@ -1,5 +1,6 @@
 package org.cwitmer34.marketplace;
 
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import lombok.Getter;
@@ -33,6 +34,8 @@ import org.cwitmer34.marketplace.util.GeneralUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class TrialMarketplace extends JavaPlugin {
 
@@ -61,7 +64,6 @@ public final class TrialMarketplace extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-
 		plugin = this;
 		saveDefaultConfig();
 		config = getConfig();
@@ -75,11 +77,13 @@ public final class TrialMarketplace extends JavaPlugin {
 		collectHandler = new CollectHandler();
 		transactionsHandler = new TransactionsHandler();
 
-		initPlayerListings();
-		initPlayerCollects();
-		initPlayerTransactions();
-		listingsHandler.syncFromMongo();
-		collectHandler.syncFromMongo();
+		if (this.isEnabled()) {
+			initPlayerListings();
+			initPlayerCollects();
+			initPlayerTransactions();
+			listingsHandler.syncFromMongo();
+			collectHandler.syncFromMongo();
+		}
 
 		if (!hasVaultDependency()) {
 			ConsoleUtil.severe("Disabling plugin due to missing Vault dependency...");
@@ -150,7 +154,7 @@ public final class TrialMarketplace extends JavaPlugin {
 						collectHandler.createCollect(playerUuid, collectUuid, serializedItems);
 					}
 				} catch (Exception e) {
-					getLogger().severe("Failed to fetch listings from MongoDB: " + e.getMessage());
+					getLogger().severe("Failed to fetch collects from MongoDB: " + e.getMessage());
 					ConsoleUtil.severe("Please ensure your MongoDB URI is correct.");
 					ConsoleUtil.severe("Disabling plugin...");
 					getServer().getPluginManager().disablePlugin(TrialMarketplace.getPlugin());
@@ -179,6 +183,16 @@ public final class TrialMarketplace extends JavaPlugin {
 				}
 			}
 		}.runTaskAsynchronously(this);
+	}
+
+	@Override
+	public void onLoad() {
+
+		System.setProperty("DEBUG.GO", "true");
+		System.setProperty("DB.TRACE", "true");
+		Logger mongoLogger = Logger.getLogger("org.mongodb.driver.*");
+		mongoLogger.setLevel(Level.OFF);
+
 	}
 
 	private boolean hasVaultDependency() {

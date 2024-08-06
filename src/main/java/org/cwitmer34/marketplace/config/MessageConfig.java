@@ -1,7 +1,5 @@
 package org.cwitmer34.marketplace.config;
 
-import com.google.common.collect.FluentIterable;
-import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.cwitmer34.marketplace.TrialMarketplace;
 
@@ -33,10 +31,13 @@ public class MessageConfig {
 	public static String moreThanMaxTransactions = config.getString("command-messages.moreThanMaxTransactions");
 	public static String lessThanMaxTransactions = config.getString("command-messages.lessThanMaxTransactions");
 	public static String balanceTooLow = config.getString("command-messages.balanceTooLow");
-	public static String alreadyPurchased = config.getString("command-messages.alreadyPurchased");
+	public static String noLongerAvailable = config.getString("command-messages.alreadyPurchased");
 	public static String purchaseCancelled = config.getString("command-messages.purchaseCancelled");
 	public static String itemSold = config.getString("command-messages.itemSold");
 	public static String itemPurchased = config.getString("command-messages.itemPurchased");
+
+	public static String noRefreshPermission = config.getString("blackmarket.noRefreshPermission");
+
 
 	public static boolean enableDiscordWebhook = config.getBoolean("discord.enableMessages");
 	public static String discordWebhook = config.getString("discord.webhook");

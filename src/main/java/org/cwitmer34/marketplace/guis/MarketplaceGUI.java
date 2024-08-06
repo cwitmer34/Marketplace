@@ -2,6 +2,7 @@ package org.cwitmer34.marketplace.guis;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.cwitmer34.marketplace.TrialMarketplace;
 import org.cwitmer34.marketplace.config.ButtonsConfig;
 import org.cwitmer34.marketplace.items.guiItems.*;
 import xyz.xenondevs.invui.gui.Gui;
@@ -38,6 +39,9 @@ public class MarketplaceGUI {
 					.build();
 
 	public void removeListing(String itemUuid) throws IOException {
+		if (BlackmarketGUI.getItems().containsKey(itemUuid)) {
+			BlackmarketGUI.removeItem(itemUuid);
+		}
 		items.remove(itemUuid);
 		updateListings();
 	}

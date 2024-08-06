@@ -5,12 +5,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.cwitmer34.marketplace.TrialMarketplace;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 
-import java.util.Objects;
-
 public class ButtonsConfig {
+	public static  Material BM_BORDER = Material.YELLOW_STAINED_GLASS_PANE ;
 	public static Material PREVIOUS = Material.RED_CONCRETE;
 	public static Material NEXT = Material.LIME_CONCRETE;
-	public static Material INNER_BORDER = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+	public static Material COLLECT_BORDER = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
 	public static Material BORDER = Material.BLACK_STAINED_GLASS_PANE;
 	public static Material CONFIRM = Material.LIME_STAINED_GLASS_PANE;
 	public static Material BACK = Material.RED_STAINED_GLASS_PANE;
@@ -20,7 +19,8 @@ public class ButtonsConfig {
 		PREVIOUS = getMaterial("previous", PREVIOUS);
 		NEXT = getMaterial("next", NEXT);
 		COLLECT = getMaterial("collect", COLLECT);
-		INNER_BORDER = getMaterial("inner-border", INNER_BORDER);
+		BM_BORDER = getMaterial("blackmarket-border", BM_BORDER);
+		COLLECT_BORDER = getMaterial("collect-border", COLLECT_BORDER);
 		BORDER = getMaterial("border", BORDER);
 		CONFIRM = getMaterial("confirm", CONFIRM);
 		BACK = getMaterial("back", BACK);

@@ -3,7 +3,6 @@ package org.cwitmer34.marketplace;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import lombok.Getter;
-import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bson.Document;
@@ -14,15 +13,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.cwitmer34.marketplace.commands.*;
 import org.cwitmer34.marketplace.config.ButtonsConfig;
+import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.data.mongo.Mongo;
 import org.cwitmer34.marketplace.data.mongo.collect.CollectHandler;
 import org.cwitmer34.marketplace.data.mongo.listings.ListingsHandler;
 import org.cwitmer34.marketplace.data.mongo.transactions.TransactionsHandler;
 import org.cwitmer34.marketplace.discord.DiscordWebhook;
-import org.cwitmer34.marketplace.events.customevents.ListItemEvent;
-import org.cwitmer34.marketplace.events.customevents.PurchaseItemEvent;
 import org.cwitmer34.marketplace.events.handlers.ListItemHandler;
 import org.cwitmer34.marketplace.events.handlers.PurchaseItemHandler;
+import org.cwitmer34.marketplace.guis.BlackmarketGUI;
 import org.cwitmer34.marketplace.guis.CollectGUI;
 import org.cwitmer34.marketplace.guis.MarketplaceGUI;
 import org.cwitmer34.marketplace.events.handlers.JoinHandler;
@@ -30,9 +29,7 @@ import org.cwitmer34.marketplace.items.guiItems.ListedItem;
 import org.cwitmer34.marketplace.data.redis.Redis;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 import org.cwitmer34.marketplace.util.GeneralUtil;
-import xyz.xenondevs.invui.item.Item;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,9 +39,6 @@ public final class TrialMarketplace extends JavaPlugin {
 	@Getter
 	public static Economy economy = null;
 
-	@Getter
-	@Setter
-	public static List<Item> marketplaceItems = new ArrayList<>();
 	@Getter
 	public static MarketplaceGUI marketplaceGUI = new MarketplaceGUI();
 	@Getter
@@ -75,7 +69,7 @@ public final class TrialMarketplace extends JavaPlugin {
 
 		mongo = new Mongo();
 		redis = new Redis();
-		discordWebhook = new DiscordWebhook();
+		discordWebhook = new DiscordWebhook(MessageConfig.discordWebhook);
 
 		listingsHandler = new ListingsHandler();
 		collectHandler = new CollectHandler();
@@ -131,8 +125,12 @@ public final class TrialMarketplace extends JavaPlugin {
 						ItemStack itemStack = GeneralUtil.itemStackFromBase64(serializedItem);
 						getMarketplaceGUI().addListing(itemUuid, new ListedItem(itemStack, playerName, itemUuid, price, duration));
 					}
+					BlackmarketGUI.refreshItems();
 				} catch (Exception e) {
 					getLogger().severe("Failed to fetch listings from MongoDB: " + e.getMessage());
+					ConsoleUtil.severe("Please ensure your MongoDB URI is correct.");
+					ConsoleUtil.severe("Disabling plugin...");
+					getServer().getPluginManager().disablePlugin(TrialMarketplace.getPlugin());
 				}
 			}
 		}.runTaskAsynchronously(this);
@@ -152,7 +150,10 @@ public final class TrialMarketplace extends JavaPlugin {
 						collectHandler.createCollect(playerUuid, collectUuid, serializedItems);
 					}
 				} catch (Exception e) {
-					getLogger().severe("Failed to fetch playerCollect from MongoDB: " + e.getMessage());
+					getLogger().severe("Failed to fetch listings from MongoDB: " + e.getMessage());
+					ConsoleUtil.severe("Please ensure your MongoDB URI is correct.");
+					ConsoleUtil.severe("Disabling plugin...");
+					getServer().getPluginManager().disablePlugin(TrialMarketplace.getPlugin());
 				}
 			}
 		}.runTaskAsynchronously(this);
@@ -171,7 +172,10 @@ public final class TrialMarketplace extends JavaPlugin {
 						transactionsHandler.createTransaction(uuid, transactions);
 					}
 				} catch (Exception e) {
-					ConsoleUtil.severe("Failed to fetch transactions from MongoDB: " + e.getMessage());
+					getLogger().severe("Failed to fetch listings from MongoDB: " + e.getMessage());
+					ConsoleUtil.severe("Please ensure your MongoDB URI is correct.");
+					ConsoleUtil.severe("Disabling plugin...");
+					getServer().getPluginManager().disablePlugin(TrialMarketplace.getPlugin());
 				}
 			}
 		}.runTaskAsynchronously(this);
@@ -203,6 +207,7 @@ public final class TrialMarketplace extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		this.getServer().getScheduler().cancelTasks(this);
 		getListingsHandler().syncListings();
 		getCollectHandler().syncCollects();
 	}

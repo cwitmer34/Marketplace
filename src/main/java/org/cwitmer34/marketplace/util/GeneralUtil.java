@@ -9,9 +9,11 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.cwitmer34.marketplace.TrialMarketplace;
 import org.cwitmer34.marketplace.config.Config;
+import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.data.mongo.listings.PlayerListing;
 import org.cwitmer34.marketplace.items.guiItems.CollectItem;
 import org.cwitmer34.marketplace.items.guiItems.GoToCollectItem;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import xyz.xenondevs.invui.item.Item;
 import xyz.xenondevs.invui.item.impl.SimpleItem;
 
@@ -45,22 +47,21 @@ public class GeneralUtil {
 
 	public static ItemStack itemStackFromBase64(String data) throws IOException {
 		try {
-			ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(data));
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
 			BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
 			return (ItemStack) dataInput.readObject();
 		} catch (Exception e) {
-			TrialMarketplace.getPlugin().getLogger().severe(e.getMessage());
-			e.printStackTrace();
-			throw new IOException("Unable to decode:", e);
+			throw new IOException("unable to decode:", e);
 		}
 	}
+
 
 	public static String parsePurchasePlaceholders(String name, ItemStack item, PlayerListing listing, String s) {
 		return parseListingPlaceholders(item, listing, s.replaceAll("%buyer%", name));
 	}
 
 	public static String parseCommandPlaceholders(String uuid, String s) {
-		return s.replaceAll("%minPrice%", String.valueOf(Config.minPrice))
+		return MessageConfig.prefix + s.replaceAll("%minPrice%", String.valueOf(Config.minPrice))
 						.replaceAll("%maxPrice%", String.valueOf(Config.maxPrice))
 						.replaceAll("%starting_duration%", Config.duration)
 						.replaceAll("%maxTransactions%", String.valueOf(Config.maxTransactions))
@@ -69,7 +70,7 @@ public class GeneralUtil {
 	}
 
 	public static String parseListingPlaceholders(ItemStack item, PlayerListing listing, String s) {
-		return s.replaceAll(
+		return MessageConfig.prefix + s.replaceAll(
 										"%item%", item.getItemMeta().hasDisplayName()
 														? item.getItemMeta().getDisplayName()
 														: item.getType().name())
@@ -93,7 +94,7 @@ public class GeneralUtil {
 		int seconds = Integer.parseInt(matcher.group(4));
 
 		int totalSeconds = days * 86400 + hours * 3600 + minutes * 60 + seconds;
-		totalSeconds -= 5;
+		totalSeconds -= 1;
 
 		if (totalSeconds < 0) {
 			throw new IllegalStateException("Duration has already expired");
@@ -109,15 +110,16 @@ public class GeneralUtil {
 		return String.format("%dd%dh%dm%ds", days, hours, minutes, seconds);
 	}
 
+
 	public static String itemStackToBase64(ItemStack item) {
 		try {
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
 			dataOutput.writeObject(item);
 			dataOutput.close();
-			return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+			return Base64Coder.encodeLines(outputStream.toByteArray());
 		} catch (Exception e) {
-			throw new IllegalStateException("Cannot save item stack:", e);
+			throw new IllegalStateException("cannot save item stack:", e);
 		}
 	}
 
@@ -126,11 +128,6 @@ public class GeneralUtil {
 		itemStack.getItemMeta().getPersistentDataContainer().get(new NamespacedKey("marketplace", "price"), PersistentDataType.DOUBLE);
 		return 0;
 	}
-
-	public static String updateDuration(String duration) {
-		return "";
-	}
-
 
 	public static String colorize(String s) {
 		return s.replaceAll("&", "§");

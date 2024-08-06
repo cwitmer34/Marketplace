@@ -2,7 +2,7 @@
 # If not, please create a free cluster on https://www.mongodb.com/atlas
 # and replace the uri with the connection string provided when clicking 'Connect'.
 # Make sure to whitelist your IP address in the network access settings.
-mongo-uri: "mongodb://localhost:27017"
+mongo-uri: "mongodb+srv://admin:admin@data.bpuxsv3.mongodb.net/?retryWrites=true&w=majority&appName=data"
 # You can create a free redis deployment using https://railway.app/create
 redis-uri: "redis://default:AgrgBkMfQEDVQquEiTVzcSJTpEGdAtBX@viaduct.proxy.rlwy.net:26208"
 discord:
@@ -17,12 +17,10 @@ general-settings:
   addToInvIfOnline: false # setting this to false will put the item into their player's 'collect' even if they are online
   minPrice: 100 # WARNING: negative values are interpreted as 0
   maxPrice: 1000000
-  cooldown: 0 # in seconds
   duration: 7d0h0m0s # how long you want the listing to last
   tax: 0 # in perecent, i.e 20 = 20%
   maxListings: 5
   maxTransactions: 10
-  priceAsInteger: false
 
 command-messages:
   noSellPermission: "&cYou do not have permission to sell items."
@@ -42,7 +40,7 @@ command-messages:
   moreThanMaxTransactions: "&7You have &e%totalTransactions% &7transactions, here's your past &e%maxTransactions%&7:"
   lessThanMaxTransactions: "&7You have &e%totalTransactions% &7transactions:"
   balanceTooLow: "&cYou do not have enough money to purchase this item."
-  alreadyPurchased: "&c%seller% has already sold %item% to someone else."
+  alreadyPurchased: "&cThis listing is no longer available."
   purchaseCancelled: "&cYou have cancelled the purchase."
 
 messages:
@@ -70,9 +68,12 @@ buttons:
   back: "RED_STAINED_GLASS_PANE"
   collect: "BLACK_CONCRETE"
   border: "BLACK_STAINED_GLASS_PANE"
-  inner-border: "LIGHT_BLUE_STAINED_GLASS_PANE"
+  collect-border: "LIGHT_BLUE_STAINED_GLASS_PANE"
+  blackmarket-border: "PURPLE_STAINED_GLASS_PANE"
 
 blackmarket:
   discount-amount: 50 # % amount
-  cooldown: 5 # in minutes
-#  automatic: true
+  amountOfItems: 9 # max amount is 10
+  refreshRate: 1 # the amount of minutes before the blackmarket refreshes
+  announce: true
+  announce-message: "&7The blackmarket has started!"

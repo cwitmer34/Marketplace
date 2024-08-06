@@ -3,15 +3,19 @@ package org.cwitmer34.marketplace.items.guiItems;
 import lombok.SneakyThrows;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.config.BMConfig;
 import org.cwitmer34.marketplace.config.ButtonsConfig;
 import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.data.mongo.listings.PlayerListing;
 import org.cwitmer34.marketplace.events.customevents.PurchaseItemEvent;
+import org.cwitmer34.marketplace.guis.BlackmarketGUI;
+import org.cwitmer34.marketplace.util.ConsoleUtil;
 import org.cwitmer34.marketplace.util.InvUtil;
 import org.cwitmer34.marketplace.config.Config;
 import org.cwitmer34.marketplace.util.GeneralUtil;
@@ -23,6 +27,8 @@ import xyz.xenondevs.invui.item.impl.AbstractItem;
 import xyz.xenondevs.invui.item.impl.SimpleItem;
 import xyz.xenondevs.invui.window.Window;
 
+import java.util.UUID;
+
 public class ConfirmItem extends AbstractItem {
 	Item itemToSell;
 	int clickedSlot;
@@ -32,7 +38,7 @@ public class ConfirmItem extends AbstractItem {
 	ItemStack itemStack;
 	ItemStack originalItem;
 
-	double price;
+	int price;
 
 	public ConfirmItem(Item itemToSell, String sellerName, String itemUuid, int price, ItemStack originalItem, int clickedSlot) {
 		this.clickedSlot = clickedSlot;
@@ -59,13 +65,30 @@ public class ConfirmItem extends AbstractItem {
 		try {
 			listing = TrialMarketplace.getListingsHandler().getListing(itemUuid);
 		} catch (Exception e) {
-			player.sendMessage(MessageConfig.prefix + GeneralUtil.colorize(MessageConfig.alreadyPurchased));
+			player.sendMessage(MessageConfig.prefix + GeneralUtil.parseCommandPlaceholders(player.getUniqueId().toString(), MessageConfig.noLongerAvailable));
 			Window.single().setGui(TrialMarketplace.getMarketplaceGUI().getGui()).open(player);
 			return;
 		}
+		boolean isBMItem = BlackmarketGUI.getItems().containsKey(itemUuid);
+		int bmMultiplier = 100 / BMConfig.discountAmt;
+		double priceToCharge = price;
+		double priceToCredit = price;
 
-		EconomyResponse response = TrialMarketplace.getEconomy().withdrawPlayer(player, price);
-		if (response.transactionSuccess()) {
+		if (isBMItem) {
+			priceToCharge /= bmMultiplier;
+			priceToCredit *= bmMultiplier;
+		}
+
+		EconomyResponse response = TrialMarketplace.economy.withdrawPlayer(player, priceToCharge);
+		if (response.transactionSuccess() ) {
+			OfflinePlayer playerToCredit = Bukkit.getOfflinePlayer(UUID.fromString(listing.getPlayerUuid()));
+			EconomyResponse dep = TrialMarketplace.economy.depositPlayer(playerToCredit, priceToCredit);
+			if (dep.transactionSuccess()) {
+				ConsoleUtil.info("Deposited " + priceToCredit + " to " + playerToCredit.getName());
+			} else {
+				ConsoleUtil.info("Failed to deposit " + priceToCredit + " to " + playerToCredit.getName());
+			}
+
 			PurchaseItemEvent event = new PurchaseItemEvent(player, originalItem, listing);
 			Bukkit.getPluginManager().callEvent(event);
 

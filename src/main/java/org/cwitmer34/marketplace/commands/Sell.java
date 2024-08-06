@@ -51,11 +51,11 @@ public class Sell implements CommandExecutor {
 		int sellPrice = Integer.parseInt(args[0]);
 		ItemStack itemStack = player.getInventory().getItemInMainHand();
 		String itemUuid = UUID.randomUUID().toString();
+		TrialMarketplace.getListingsHandler().createListing(player.getUniqueId().toString(), player.getName(), itemUuid, GeneralUtil.itemStackToBase64(itemStack), Config.duration, sellPrice);
 		Item item = new ListedItem(itemStack, player.getName(), itemUuid, sellPrice, Config.duration);
-
 		TrialMarketplace.getMarketplaceGUI().addListing(itemUuid, item);
 
-		TrialMarketplace.getListingsHandler().createListing(player.getUniqueId().toString(), player.getName(), itemUuid, GeneralUtil.itemStackToBase64(itemStack), Config.duration, sellPrice);
+
 		PlayerListing listing = TrialMarketplace.getListingsHandler().getListing(itemUuid);
 		ListItemEvent event = new ListItemEvent(player, itemStack, listing);
 		Bukkit.getPluginManager().callEvent(event);

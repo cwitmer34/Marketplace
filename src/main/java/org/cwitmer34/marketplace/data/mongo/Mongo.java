@@ -1,9 +1,6 @@
 package org.cwitmer34.marketplace.data.mongo;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.ServerApi;
-import com.mongodb.ServerApiVersion;
+import com.mongodb.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -12,6 +9,13 @@ import lombok.Getter;
 import org.bson.Document;
 import org.bson.UuidRepresentation;
 import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.util.ConsoleUtil;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 
 @Getter
 public class Mongo {
@@ -29,16 +33,22 @@ public class Mongo {
 
 		final String uri = TrialMarketplace.getPlugin().getConfig().getString("mongo-uri");
 
+
 		final MongoClientSettings settings = MongoClientSettings.builder()
 						.applyConnectionString(new ConnectionString(uri))
-						.serverApi(serverApi)
+						.serverApi(serverApi).retryReads(false).retryWrites(false)
 						.uuidRepresentation(UuidRepresentation.JAVA_LEGACY)
 						.build();
+		try {
+			this.client = MongoClients.create(settings);
+			this.database = client.getDatabase("Marketplace");
+			this.initCollections();
+		} catch (MongoException e) {
+			ConsoleUtil.severe("Failed to connect to MongoDB. Please ensure your MongoDB URI is valid.");
+			ConsoleUtil.severe("Disabling plugin...");
+			TrialMarketplace.getPlugin().getServer().getPluginManager().disablePlugin(TrialMarketplace.getPlugin());
+		}
 
-		this.client = MongoClients.create(settings);
-		this.database = client.getDatabase("Marketplace");
-
-		this.initCollections();
 	}
 
 	private void initCollections() {

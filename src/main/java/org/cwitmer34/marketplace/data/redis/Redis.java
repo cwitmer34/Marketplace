@@ -1,4 +1,5 @@
 package org.cwitmer34.marketplace.data.redis;
+
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.cwitmer34.marketplace.TrialMarketplace;
@@ -28,7 +29,14 @@ public class Redis {
 
 		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 
-		this.pool = new JedisPool(jedisConfig, uri, Protocol.DEFAULT_TIMEOUT);
+		try {
+			this.pool = new JedisPool(jedisConfig, uri, Protocol.DEFAULT_TIMEOUT);
+		} catch (Exception e) {
+			ConsoleUtil.severe("Failed to connect to Redis. Please ensure your Redis URI is valid.");
+			ConsoleUtil.severe("If you are running on localhost, make sure you've installed Redis.");
+			ConsoleUtil.severe("Disabling plugin...");
+			TrialMarketplace.getPlugin().getServer().getPluginManager().disablePlugin(TrialMarketplace.getPlugin());
+		}
 
 		Thread.currentThread().setContextClassLoader(previous);
 	}

@@ -1,12 +1,13 @@
 package org.cwitmer34.marketplace.data.mongo.collect;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import org.bson.Document;
 import org.cwitmer34.marketplace.TrialMarketplace;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
-import redis.clients.jedis.Jedis;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CollectHandler {
 
@@ -64,40 +65,44 @@ public class CollectHandler {
 	}
 
 	public void syncCollects() {
-		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
-			final Set<String> keys = jedis.keys("collect:*");
-			keys.forEach(ConsoleUtil::warning);
-			TrialMarketplace.getMongo().getCollect().drop();
-			if (keys.isEmpty()) {
-				return;
+		long startTime = System.currentTimeMillis();
+		int totalCollectsSynced = 0;
+
+		MongoCollection<Document> collection = TrialMarketplace.getMongo().getCollect();
+		try (MongoCursor<Document> cursor = collection.find().iterator()) {
+			while (cursor.hasNext()) {
+				Document doc = cursor.next();
+				String playerUuid = doc.getString("playerUuid");
+				String collectUuid = doc.getString("collectUuid");
+				List<String> serializedItems = doc.getList("items", String.class);
+
+				createCollect(playerUuid, collectUuid, serializedItems);
+				totalCollectsSynced++;
 			}
-
-			final Pattern pattern = Pattern.compile("collect:(.*)");
-
-			for (final String key : keys) {
-				final Matcher matcher = pattern.matcher(key);
-				if (matcher.matches()) {
-					final String playerUuid = matcher.group(1);
-					final PlayerCollect collect = this.collects.get(playerUuid);
-
-					if (collect != null) {
-						this.collectStorage.save(collect, false);
-						ConsoleUtil.info("Synced collects to Mongo from Redis.");
-					}
-				}
-			}
-		} catch (final Exception e) {
-			ConsoleUtil.severe("Failed to sync collects to Mongo from Redis.");
+		} catch (Exception e) {
+			ConsoleUtil.severe("Failed to sync collects");
+			e.printStackTrace();
 		}
+
+		long endTime = System.currentTimeMillis();
+		long duration = (endTime - startTime) / 1000;
+		ConsoleUtil.info("Total collects synced: " + totalCollectsSynced + ". Time taken: " + duration + "s.");
 	}
 
 	public void syncFromMongo() {
+		long startTime = System.currentTimeMillis();
+		AtomicInteger totalCollectsSynced = new AtomicInteger();
+
 		collectStorage.loadAll().thenAccept(collects -> {
 			for (final PlayerCollect collect : collects) {
 				PlayerCollect playerCollect = new PlayerCollect(collect.getPlayerUuid(), collect.getCollectUuid(), collect.getSerializedItems());
 				playerCollect.setSerializedItems(collect.getSerializedItems());
 				this.collects.put(collect.getPlayerUuid(), collect);
+				totalCollectsSynced.getAndIncrement();
 			}
+			long endTime = System.currentTimeMillis();
+			long duration = (endTime - startTime) / 1000;
+			ConsoleUtil.info("Total collects synced: " + totalCollectsSynced + ". Time taken: " + duration + "s.");
 		}).exceptionally(e -> {
 			ConsoleUtil.severe("Failed to sync collects from Mongo to Redis.");
 			return null;

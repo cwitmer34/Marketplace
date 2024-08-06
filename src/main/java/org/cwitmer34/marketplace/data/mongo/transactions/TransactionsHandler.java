@@ -2,6 +2,7 @@ package org.cwitmer34.marketplace.data.mongo.transactions;
 
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,27 +30,27 @@ public class TransactionsHandler {
 
 	public PlayerTransactions getTransaction(String uuid) {
 		PlayerTransactions playerTransactions = transactions.get(uuid);
-
 		if (playerTransactions == null) {
-			createTransaction(uuid, List.of());
+			createTransaction(uuid, new ArrayList<>());
 			playerTransactions = transactions.get(uuid);
 		}
-
-		transactionsStorage.load(playerTransactions);
 		transactions.replace(uuid, playerTransactions);
 		return playerTransactions;
 	}
 
 	public void addTransaction(String uuid, String log) {
-		ConsoleUtil.info("Adding transaction to player: " + uuid);
-		if (!transactions.containsKey(uuid)) {
-			createTransaction(uuid, List.of(log));
+		PlayerTransactions transaction = transactions.get(uuid);
+		if (transaction == null) {
+			List<String> logs = new ArrayList<>();
+			logs.add(log);
+			createTransaction(uuid, logs);
 			return;
 		}
-		PlayerTransactions transaction = transactions.get(uuid);
+		ConsoleUtil.warning(transaction.getUuid());
 		ConsoleUtil.warning("Adding transaction to player: " + uuid);
 		ConsoleUtil.warning("Transaction: " + log);
-		transaction.getTransactions().addFirst(log);
+		transaction.getTransactions().forEach(trans -> ConsoleUtil.warning(trans + "previous transaction"));
+		transaction.getTransactions().add(log);
 		transactionsStorage.save(transaction);
 	}
 

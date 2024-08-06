@@ -1,7 +1,11 @@
 package org.cwitmer34.marketplace.data.mongo.listings;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import lombok.Getter;
+import org.bson.Document;
 import org.cwitmer34.marketplace.TrialMarketplace;
-import org.cwitmer34.marketplace.data.mongo.collect.PlayerCollect;
+import org.cwitmer34.marketplace.guis.BlackmarketGUI;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
@@ -9,9 +13,11 @@ import redis.clients.jedis.Jedis;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ListingsHandler {
 	private final ListingsStorage listingsStorage;
+	@Getter
 	private final Map<String, PlayerListing> listings = new HashMap<>();
 
 	public ListingsHandler() {
@@ -29,11 +35,45 @@ public class ListingsHandler {
 		listing.removeItemFromListing();
 	}
 
+
 	public PlayerListing getListing(final String itemUuid) {
 		return this.listings.get(itemUuid).getPlayerListing();
 	}
 
+	public void syncFromMongo() {
+		long startTime = System.currentTimeMillis();
+		AtomicInteger totalListingsSynced = new AtomicInteger();
+
+		listingsStorage.loadAll().thenAccept(listings -> {
+			for (final PlayerListing listing : listings) {
+				final PlayerListing playerListing = new PlayerListing(
+								listing.getPlayerUuid(),
+								listing.getPlayerName(),
+								listing.getItemUuid(),
+								listing.getSerializedItem(),
+								listing.getDuration(),
+								listing.getPrice()
+				);
+				playerListing.setPlayerListing();
+				this.listings.put(listing.getItemUuid(), playerListing);
+				totalListingsSynced.getAndIncrement();
+			}
+			long endTime = System.currentTimeMillis();
+			long duration = (endTime - startTime) / 1000;
+			ConsoleUtil.info("Total listings synced: " + totalListingsSynced + ". Time taken: " + duration + "s.");
+			BlackmarketGUI.updateItems();
+		}).exceptionally(e -> {
+			ConsoleUtil.severe("Failed to sync listings from Mongo to Redis.");
+			e.printStackTrace();
+			return null;
+		});
+	}
+
+
 	public void syncListings() {
+		long startTime = System.currentTimeMillis();
+		int totalListingsSynced = 0;
+
 		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
 			final Set<String> keys = jedis.keys("listing:*");
 			TrialMarketplace.getMongo().getListings().drop();
@@ -54,36 +94,19 @@ public class ListingsHandler {
 								json.getString("duration"),
 								json.getInt("price")
 				);
-				ConsoleUtil.info("PlayerListing: " + listing);
 				this.listingsStorage.save(listing, false);
-				ConsoleUtil.info("Synced listing to Mongo from Redis.");
+				totalListingsSynced++;
 			}
 		} catch (Exception e) {
 			ConsoleUtil.severe("Failed to sync listings to Mongo from Redis.");
 			e.printStackTrace();
 		}
+
+		long endTime = System.currentTimeMillis();
+		long duration = (endTime - startTime) / 1000;
+		ConsoleUtil.info("Synced " + totalListingsSynced + " from Redis to Mongo in " + duration + "s");
 	}
 
-	public void syncFromMongo() {
-		listingsStorage.loadAll().thenAccept(listings -> {
-			for (final PlayerListing listing : listings) {
-				ConsoleUtil.info(String.valueOf(listing));
-				final PlayerListing playerListing = new PlayerListing(
-								listing.getPlayerUuid(),
-								listing.getPlayerName(),
-								listing.getItemUuid(),
-								listing.getSerializedItem(),
-								listing.getDuration(),
-								listing.getPrice()
-				);
-				playerListing.setPlayerListing();
-				this.listings.put(listing.getItemUuid(), playerListing);
-				ConsoleUtil.info("Synced listing from Mongo to Redis.");
-			}
-		}).exceptionally(e -> {
-			ConsoleUtil.severe("Failed to sync listings from Mongo to Redis.");
-			e.printStackTrace();
-			return null;
-		});
-	}
 }
+
+

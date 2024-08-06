@@ -4,7 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.ReplaceOptions;
 import org.bson.Document;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 
 import java.util.ArrayList;
@@ -18,13 +18,13 @@ public class CollectMongoStorage implements CollectStorage {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				final Document document = TrialMarketplace.getMongo().getCollect().find(new Document("playerUuid", collect.getPlayerUuid())).first();
+				final Document document = MarketplaceMain.getMongo().getCollect().find(new Document("playerUuid", collect.getPlayerUuid())).first();
 
 				if (document == null) {
 					save(collect, true);
 				}
 			}
-		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+		}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class CollectMongoStorage implements CollectStorage {
 			@Override
 			public void run() {
 				try {
-					final MongoCollection<Document> collection = TrialMarketplace.getMongo().getCollect();
+					final MongoCollection<Document> collection = MarketplaceMain.getMongo().getCollect();
 
 					if(collection.countDocuments() == 0) {
 						future.complete(collects);
@@ -56,7 +56,7 @@ public class CollectMongoStorage implements CollectStorage {
 					future.completeExceptionally(e);
 				}
 			}
-		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+		}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 
 		return future;
 	}
@@ -68,25 +68,25 @@ public class CollectMongoStorage implements CollectStorage {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					final Document document = TrialMarketplace.getMongo().getCollect().find(new Document("playerUuid", collect.getPlayerUuid())).first();
+					final Document document = MarketplaceMain.getMongo().getCollect().find(new Document("playerUuid", collect.getPlayerUuid())).first();
 
 					if (document == null) {
-						TrialMarketplace.getMongo().getCollect().insertOne(collect.toBson());
+						MarketplaceMain.getMongo().getCollect().insertOne(collect.toBson());
 						return;
 					}
 
-					TrialMarketplace.getMongo().getCollect().replaceOne(document, collect.toBson(), new ReplaceOptions().upsert(true));
+					MarketplaceMain.getMongo().getCollect().replaceOne(document, collect.toBson(), new ReplaceOptions().upsert(true));
 				}
-			}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+			}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 		} else {
-			final Document document = TrialMarketplace.getMongo().getCollect().find(new Document("playerUuid", collect.getPlayerUuid())).first();
+			final Document document = MarketplaceMain.getMongo().getCollect().find(new Document("playerUuid", collect.getPlayerUuid())).first();
 
 			if (document == null) {
-				TrialMarketplace.getMongo().getCollect().insertOne(collect.toBson());
+				MarketplaceMain.getMongo().getCollect().insertOne(collect.toBson());
 				return;
 			}
 
-			TrialMarketplace.getMongo().getCollect().replaceOne(document, collect.toBson(), new ReplaceOptions().upsert(true));
+			MarketplaceMain.getMongo().getCollect().replaceOne(document, collect.toBson(), new ReplaceOptions().upsert(true));
 		}
 
 	}
@@ -103,7 +103,7 @@ public class CollectMongoStorage implements CollectStorage {
 				collect.setSerializedItems(items);
 				save(collect, true);
 			}
-		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+		}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class CollectMongoStorage implements CollectStorage {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				final Document document = TrialMarketplace.getMongo().getTransactions().find(new Document("playerUuid", collect.getPlayerUuid())).first();
+				final Document document = MarketplaceMain.getMongo().getTransactions().find(new Document("playerUuid", collect.getPlayerUuid())).first();
 				collect.getSerializedItems().remove(item);
 
 				if (document == null) {
@@ -119,9 +119,9 @@ public class CollectMongoStorage implements CollectStorage {
 					return;
 				}
 
-				TrialMarketplace.getMongo().getTransactions().replaceOne(document, collect.toBson());
+				MarketplaceMain.getMongo().getTransactions().replaceOne(document, collect.toBson());
 			}
-		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+		}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 	}
 
 	@Override
@@ -129,12 +129,12 @@ public class CollectMongoStorage implements CollectStorage {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				final Document document = TrialMarketplace.getMongo().getCollect().find(new Document("playerUuid", collect.getPlayerUuid())).first();
+				final Document document = MarketplaceMain.getMongo().getCollect().find(new Document("playerUuid", collect.getPlayerUuid())).first();
 
 				if (document != null) {
-					TrialMarketplace.getMongo().getCollect().deleteOne(document);
+					MarketplaceMain.getMongo().getCollect().deleteOne(document);
 				}
 			}
-		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+		}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 	}
 }

@@ -6,10 +6,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.util.GeneralUtil;
-import org.cwitmer34.marketplace.util.InvUtil;
 import org.jetbrains.annotations.NotNull;
 import xyz.xenondevs.invui.item.Item;
 import xyz.xenondevs.invui.item.ItemProvider;
@@ -37,7 +36,7 @@ public class CollectItem extends AbstractItem {
 			return;
 		}
 		try {
-			TrialMarketplace.getCollectHandler().removeItem(player.getUniqueId().toString(), GeneralUtil.itemStackToBase64(originalItem));
+			MarketplaceMain.getCollectHandler().removeItem(player.getUniqueId().toString(), GeneralUtil.itemStackToBase64(originalItem));
 			player.getInventory().addItem(originalItem);
 		} catch (Exception e) {
 			e.printStackTrace();

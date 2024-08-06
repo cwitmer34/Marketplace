@@ -3,10 +3,8 @@ package org.cwitmer34.marketplace.util;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.cwitmer34.marketplace.TrialMarketplace;
-import org.cwitmer34.marketplace.config.Config;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.config.MessageConfig;
 
 public class InvUtil {
@@ -21,6 +19,6 @@ public class InvUtil {
 
 	public static void addToCollect(final String playerUuid, final ItemStack originalItem) {
 		final String serializedItem = GeneralUtil.itemStackToBase64(originalItem);
-		TrialMarketplace.getCollectHandler().addItem(playerUuid, serializedItem);
+		MarketplaceMain.getCollectHandler().addItem(playerUuid, serializedItem);
 	}
 }

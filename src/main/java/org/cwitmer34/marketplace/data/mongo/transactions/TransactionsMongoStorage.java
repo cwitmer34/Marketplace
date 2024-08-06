@@ -1,9 +1,8 @@
 package org.cwitmer34.marketplace.data.mongo.transactions;
 
-import com.mongodb.client.model.ReplaceOptions;
 import org.bson.Document;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 
 import java.util.List;
@@ -14,7 +13,7 @@ public class TransactionsMongoStorage implements TransactionsStorage {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getTransactions().find(new Document("uuid", transactions.getUuid())).first();
+				Document document = MarketplaceMain.getMongo().getTransactions().find(new Document("uuid", transactions.getUuid())).first();
 				if (document == null) {
 					save(transactions);
 					return;
@@ -22,7 +21,7 @@ public class TransactionsMongoStorage implements TransactionsStorage {
 				List<String> logs = document.getList("transactions", String.class);
 				transactions.setTransactions(logs);
 			}
-		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+		}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 	}
 
 	@Override
@@ -30,14 +29,14 @@ public class TransactionsMongoStorage implements TransactionsStorage {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getTransactions().find(new Document("uuid", transactions.getUuid())).first();
+				Document document = MarketplaceMain.getMongo().getTransactions().find(new Document("uuid", transactions.getUuid())).first();
 				if (document == null) {
-					TrialMarketplace.getMongo().getTransactions().insertOne(transactions.toBson());
+					MarketplaceMain.getMongo().getTransactions().insertOne(transactions.toBson());
 					return;
 				}
-				TrialMarketplace.getMongo().getTransactions().replaceOne(document, transactions.toBson());
+				MarketplaceMain.getMongo().getTransactions().replaceOne(document, transactions.toBson());
 			}
-		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+		}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 
 	}
 
@@ -54,7 +53,7 @@ public class TransactionsMongoStorage implements TransactionsStorage {
 				transactions.setTransactions(logs);
 				save(transactions);
 			}
-		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+		}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 	}
 
 	@Override
@@ -62,7 +61,7 @@ public class TransactionsMongoStorage implements TransactionsStorage {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getTransactions().find(new Document("uuid", transactions.getUuid())).first();
+				Document document = MarketplaceMain.getMongo().getTransactions().find(new Document("uuid", transactions.getUuid())).first();
 				if (document == null) {
 					transactions.getTransactions().remove(transaction);
 					save(transactions);
@@ -70,9 +69,9 @@ public class TransactionsMongoStorage implements TransactionsStorage {
 				}
 
 				transactions.getTransactions().remove(transaction);
-				TrialMarketplace.getMongo().getTransactions().replaceOne(document, transactions.toBson());
+				MarketplaceMain.getMongo().getTransactions().replaceOne(document, transactions.toBson());
 			}
-		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+		}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 
 	}
 
@@ -81,11 +80,11 @@ public class TransactionsMongoStorage implements TransactionsStorage {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Document document = TrialMarketplace.getMongo().getTransactions().find(new Document("uuid", transactions.getUuid())).first();
+				Document document = MarketplaceMain.getMongo().getTransactions().find(new Document("uuid", transactions.getUuid())).first();
 				if (document != null) {
-					TrialMarketplace.getMongo().getTransactions().deleteOne(document);
+					MarketplaceMain.getMongo().getTransactions().deleteOne(document);
 				}
 			}
-		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+		}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 	}
 }

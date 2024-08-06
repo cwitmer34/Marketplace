@@ -1,10 +1,7 @@
 package org.cwitmer34.marketplace.data.mongo.listings;
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import lombok.Getter;
-import org.bson.Document;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.guis.BlackmarketGUI;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 import org.json.JSONObject;
@@ -74,9 +71,9 @@ public class ListingsHandler {
 		long startTime = System.currentTimeMillis();
 		int totalListingsSynced = 0;
 
-		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
+		try (final Jedis jedis = MarketplaceMain.getRedis().getPool()) {
 			final Set<String> keys = jedis.keys("listing:*");
-			TrialMarketplace.getMongo().getListings().drop();
+			MarketplaceMain.getMongo().getListings().drop();
 			if (keys.isEmpty()) {
 				return;
 			}

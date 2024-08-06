@@ -2,14 +2,11 @@ package org.cwitmer34.marketplace.guis;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.cwitmer34.marketplace.TrialMarketplace;
-import org.cwitmer34.marketplace.config.ButtonsConfig;
 import org.cwitmer34.marketplace.items.guiItems.*;
 import xyz.xenondevs.invui.gui.Gui;
 import xyz.xenondevs.invui.gui.PagedGui;
 import xyz.xenondevs.invui.gui.structure.Markers;
 import xyz.xenondevs.invui.item.Item;
-import xyz.xenondevs.invui.item.impl.SimpleItem;
 
 import java.io.IOException;
 import java.util.ArrayList;

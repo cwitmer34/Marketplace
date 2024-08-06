@@ -1,13 +1,13 @@
 package org.cwitmer34.marketplace.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.util.GeneralUtil;
 
 import java.util.Objects;
 
 public class MessageConfig {
-	private static FileConfiguration config = TrialMarketplace.config;
+	private static FileConfiguration config = MarketplaceMain.config;
 	public static String prefix = GeneralUtil.colorize(Objects.requireNonNullElse(config.getString("messages.prefix"), "&7[&6Marketplace&7] "));
 	public static boolean announcePurchases = config.getBoolean("messages.purchases.announce");
 	public static String purchaseAnnounce = config.getString("messages.purchases.announce-message");

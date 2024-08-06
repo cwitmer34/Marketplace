@@ -2,13 +2,12 @@ package org.cwitmer34.marketplace.data.redis;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 import redis.clients.jedis.*;
 
 import java.net.URI;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 public class Redis {
@@ -21,7 +20,7 @@ public class Redis {
 	@SneakyThrows
 	private void init() {
 		final JedisPoolConfig jedisConfig = new JedisPoolConfig();
-		final URI uri = new URI(Objects.requireNonNull(TrialMarketplace.getPlugin().getConfig().getString("redis-uri")));
+		final URI uri = new URI(Objects.requireNonNull(MarketplaceMain.getPlugin().getConfig().getString("redis-uri")));
 		jedisConfig.setMaxIdle(64);
 		jedisConfig.setMaxTotal(64);
 
@@ -35,7 +34,7 @@ public class Redis {
 			ConsoleUtil.severe("Failed to connect to Redis. Please ensure your Redis URI is valid.");
 			ConsoleUtil.severe("If you are running on localhost, make sure you've installed Redis.");
 			ConsoleUtil.severe("Disabling plugin...");
-			TrialMarketplace.getPlugin().getServer().getPluginManager().disablePlugin(TrialMarketplace.getPlugin());
+			MarketplaceMain.getPlugin().getServer().getPluginManager().disablePlugin(MarketplaceMain.getPlugin());
 		}
 
 		Thread.currentThread().setContextClassLoader(previous);

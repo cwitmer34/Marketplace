@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.config.BMConfig;
 import org.cwitmer34.marketplace.config.ButtonsConfig;
 import org.cwitmer34.marketplace.config.MessageConfig;
@@ -63,10 +63,10 @@ public class ConfirmItem extends AbstractItem {
 		PlayerListing listing;
 
 		try {
-			listing = TrialMarketplace.getListingsHandler().getListing(itemUuid);
+			listing = MarketplaceMain.getListingsHandler().getListing(itemUuid);
 		} catch (Exception e) {
 			player.sendMessage(MessageConfig.prefix + GeneralUtil.parseCommandPlaceholders(player.getUniqueId().toString(), MessageConfig.noLongerAvailable));
-			Window.single().setGui(TrialMarketplace.getMarketplaceGUI().getGui()).open(player);
+			Window.single().setGui(MarketplaceMain.getMarketplaceGUI().getGui()).open(player);
 			return;
 		}
 		boolean isBMItem = BlackmarketGUI.getItems().containsKey(itemUuid);
@@ -79,10 +79,10 @@ public class ConfirmItem extends AbstractItem {
 			priceToCredit *= bmMultiplier;
 		}
 
-		EconomyResponse response = TrialMarketplace.economy.withdrawPlayer(player, priceToCharge);
+		EconomyResponse response = MarketplaceMain.economy.withdrawPlayer(player, priceToCharge);
 		if (response.transactionSuccess() ) {
 			OfflinePlayer playerToCredit = Bukkit.getOfflinePlayer(UUID.fromString(listing.getPlayerUuid()));
-			EconomyResponse dep = TrialMarketplace.economy.depositPlayer(playerToCredit, priceToCredit);
+			EconomyResponse dep = MarketplaceMain.economy.depositPlayer(playerToCredit, priceToCredit);
 			if (dep.transactionSuccess()) {
 				ConsoleUtil.info("Deposited " + priceToCredit + " to " + playerToCredit.getName());
 			} else {
@@ -92,11 +92,11 @@ public class ConfirmItem extends AbstractItem {
 			PurchaseItemEvent event = new PurchaseItemEvent(player, originalItem, listing);
 			Bukkit.getPluginManager().callEvent(event);
 
-			TrialMarketplace.getTransactionsHandler().addTransaction(player.getUniqueId().toString(), GeneralUtil.parsePurchasePlaceholders(player.getName(), itemStack, listing, MessageConfig.itemPurchased));
-			TrialMarketplace.getTransactionsHandler().addTransaction(listing.getPlayerUuid(), GeneralUtil.parsePurchasePlaceholders(player.getName(), itemStack, listing, MessageConfig.itemSold));
+			MarketplaceMain.getTransactionsHandler().addTransaction(player.getUniqueId().toString(), GeneralUtil.parsePurchasePlaceholders(player.getName(), itemStack, listing, MessageConfig.itemPurchased));
+			MarketplaceMain.getTransactionsHandler().addTransaction(listing.getPlayerUuid(), GeneralUtil.parsePurchasePlaceholders(player.getName(), itemStack, listing, MessageConfig.itemSold));
 
-			TrialMarketplace.getListingsHandler().deleteListing(itemUuid);
-			TrialMarketplace.getMarketplaceGUI().removeListing(itemUuid);
+			MarketplaceMain.getListingsHandler().deleteListing(itemUuid);
+			MarketplaceMain.getMarketplaceGUI().removeListing(itemUuid);
 
 			if (Config.addToInvIfOnline) {
 				InvUtil.giveUnlessFullInv(player, originalItem);
@@ -109,7 +109,7 @@ public class ConfirmItem extends AbstractItem {
 		} else {
 			player.sendMessage(MessageConfig.prefix + response.errorMessage);
 		}
-		Window.single().setGui(TrialMarketplace.getMarketplaceGUI().getGui()).open(player);
+		Window.single().setGui(MarketplaceMain.getMarketplaceGUI().getGui()).open(player);
 		notifyWindows();
 	}
 }

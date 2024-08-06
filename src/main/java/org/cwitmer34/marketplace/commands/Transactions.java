@@ -1,12 +1,10 @@
 package org.cwitmer34.marketplace.commands;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.config.Config;
 import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.util.GeneralUtil;
@@ -26,7 +24,7 @@ public class Transactions implements CommandExecutor {
 			player.sendMessage(MessageConfig.prefix + GeneralUtil.colorize(MessageConfig.noTransactionPermission));
 			return true;
 		}
-		final List<String> transactions = TrialMarketplace.getTransactionsHandler().getTransaction(uuid).getTransactions();
+		final List<String> transactions = MarketplaceMain.getTransactionsHandler().getTransaction(uuid).getTransactions();
 		if (transactions.isEmpty()) {
 			player.sendMessage(MessageConfig.prefix + GeneralUtil.parseCommandPlaceholders(uuid, MessageConfig.noTransactions));
 			return true;

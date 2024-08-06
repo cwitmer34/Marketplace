@@ -7,29 +7,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.data.mongo.listings.PlayerListing;
 import org.cwitmer34.marketplace.guis.ConfirmationGUI;
-import org.cwitmer34.marketplace.guis.MarketplaceGUI;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 import org.cwitmer34.marketplace.util.GeneralUtil;
 import org.cwitmer34.marketplace.util.ItemUtil;
 import org.jetbrains.annotations.NotNull;
-import xyz.xenondevs.invui.item.Item;
 import xyz.xenondevs.invui.item.ItemProvider;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.AbstractItem;
-import xyz.xenondevs.invui.item.impl.AutoUpdateItem;
 import xyz.xenondevs.invui.item.impl.SimpleItem;
 import xyz.xenondevs.invui.window.Window;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 public class ListedItem extends AbstractItem {
 
@@ -65,19 +59,19 @@ public class ListedItem extends AbstractItem {
 	}
 
 	public void updateDuration() {
-		PlayerListing listing = TrialMarketplace.getListingsHandler().getListing(itemUuid);
+		PlayerListing listing = MarketplaceMain.getListingsHandler().getListing(itemUuid);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				if (!TrialMarketplace.getMarketplaceGUI().getItems().containsKey(itemUuid)) {
+				if (!MarketplaceMain.getMarketplaceGUI().getItems().containsKey(itemUuid)) {
 					cancel();
 					return;
 				}
 				if (duration.equals("0d0h0m0s")) {
 					try {
-						TrialMarketplace.getMarketplaceGUI().removeListing(listing.getItemUuid());
-						TrialMarketplace.getListingsHandler().deleteListing(listing.getItemUuid());
-						TrialMarketplace.getCollectHandler().addItem(listing.getPlayerUuid(), listing.getSerializedItem());
+						MarketplaceMain.getMarketplaceGUI().removeListing(listing.getItemUuid());
+						MarketplaceMain.getListingsHandler().deleteListing(listing.getItemUuid());
+						MarketplaceMain.getCollectHandler().addItem(listing.getPlayerUuid(), listing.getSerializedItem());
 						try {
 							Player player = Bukkit.getPlayer(UUID.fromString(listing.getPlayerUuid()));
 							if (player != null) {
@@ -96,8 +90,8 @@ public class ListedItem extends AbstractItem {
 				setDuration(GeneralUtil.decrementDuration(duration));
 				listing.setDuration(duration);
 				listing.setPlayerListing();
-				TrialMarketplace.getMarketplaceGUI().updateListings();
+				MarketplaceMain.getMarketplaceGUI().updateListings();
 			}
-		}.runTaskTimerAsynchronously(TrialMarketplace.getPlugin(), 0, 20);
+		}.runTaskTimerAsynchronously(MarketplaceMain.getPlugin(), 0, 20);
 	}
 }

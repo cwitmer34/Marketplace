@@ -1,10 +1,9 @@
 package org.cwitmer34.marketplace.data.mongo.collect;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 import org.cwitmer34.marketplace.util.GeneralUtil;
 import redis.clients.jedis.Jedis;
@@ -29,7 +28,7 @@ public class PlayerCollect {
 	}
 
 	public void setSerializedItems(final List<String> serializedItems) {
-		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
+		try (final Jedis jedis = MarketplaceMain.getRedis().getPool()) {
 			if (serializedItems.isEmpty()) return;
 			jedis.del(key);
 			jedis.rpush(key, serializedItems.toArray(new String[0]));
@@ -37,25 +36,25 @@ public class PlayerCollect {
 	}
 
 	public void addSerializedItem(final String item) {
-		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
+		try (final Jedis jedis = MarketplaceMain.getRedis().getPool()) {
 			ConsoleUtil.warning("Adding item to player collect: " + key);
 			jedis.rpush(key, item);
 		}
 	}
 
 	public final void removeSerializedItem(final String item) {
-		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
+		try (final Jedis jedis = MarketplaceMain.getRedis().getPool()) {
 			String item1 = getSerializedItem(item);
 			jedis.lrem(key, 1, item1);
 			List<Item> items = GeneralUtil.deserializeItems(this.getSerializedItems());
-			TrialMarketplace.getCollectGuis().get(playerUuid).setItems(items);
+			MarketplaceMain.getCollectGuis().get(playerUuid).setItems(items);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	public final List<String> getSerializedItems() {
-		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
+		try (final Jedis jedis = MarketplaceMain.getRedis().getPool()) {
 			return jedis.lrange(key, 0, -1);
 		}
 	}
@@ -71,7 +70,7 @@ public class PlayerCollect {
 	}
 
 	public void removeAllSerializedItems() {
-		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
+		try (final Jedis jedis = MarketplaceMain.getRedis().getPool()) {
 			jedis.del(key);
 		}
 	}

@@ -4,7 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.data.mongo.collect.PlayerCollect;
 import org.cwitmer34.marketplace.guis.CollectGUI;
@@ -27,7 +27,7 @@ public class Collect implements CommandExecutor {
 			return true;
 		}
 
-		PlayerCollect playerCollect = TrialMarketplace.getCollectHandler().getCollect(player.getUniqueId().toString());
+		PlayerCollect playerCollect = MarketplaceMain.getCollectHandler().getCollect(player.getUniqueId().toString());
 		List<Item> items;
 		try {
 			items = GeneralUtil.deserializeItems(playerCollect.getSerializedItems());
@@ -41,7 +41,7 @@ public class Collect implements CommandExecutor {
 			return true;
 		}
 
-		CollectGUI collectGUI = TrialMarketplace.getCollectGuis().get(player.getUniqueId().toString());
+		CollectGUI collectGUI = MarketplaceMain.getCollectGuis().get(player.getUniqueId().toString());
 		try {
 			collectGUI.setItems(items);
 		} catch (IOException e) {

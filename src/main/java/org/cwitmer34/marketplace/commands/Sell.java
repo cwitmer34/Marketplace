@@ -1,15 +1,13 @@
 package org.cwitmer34.marketplace.commands;
 
 import lombok.SneakyThrows;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.data.mongo.listings.PlayerListing;
 import org.cwitmer34.marketplace.events.customevents.ListItemEvent;
@@ -52,12 +50,12 @@ public class Sell implements CommandExecutor {
 		ItemStack itemStack = player.getInventory().getItemInMainHand();
 		player.getInventory().setItemInMainHand(null);
 		String itemUuid = UUID.randomUUID().toString();
-		TrialMarketplace.getListingsHandler().createListing(player.getUniqueId().toString(), player.getName(), itemUuid, GeneralUtil.itemStackToBase64(itemStack), Config.duration, sellPrice);
+		MarketplaceMain.getListingsHandler().createListing(player.getUniqueId().toString(), player.getName(), itemUuid, GeneralUtil.itemStackToBase64(itemStack), Config.duration, sellPrice);
 		Item item = new ListedItem(itemStack, player.getName(), itemUuid, sellPrice, Config.duration);
-		TrialMarketplace.getMarketplaceGUI().addListing(itemUuid, item);
+		MarketplaceMain.getMarketplaceGUI().addListing(itemUuid, item);
 
 
-		PlayerListing listing = TrialMarketplace.getListingsHandler().getListing(itemUuid);
+		PlayerListing listing = MarketplaceMain.getListingsHandler().getListing(itemUuid);
 		ListItemEvent event = new ListItemEvent(player, itemStack, listing);
 		Bukkit.getPluginManager().callEvent(event);
 

@@ -1,10 +1,10 @@
 package org.cwitmer34.marketplace.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 
 public class BMConfig {
-	private static final FileConfiguration config = TrialMarketplace.getPlugin().getConfig();
+	private static final FileConfiguration config = MarketplaceMain.getPlugin().getConfig();
 	public static final int duration = config.getInt("blackmarket.duration");
 	public static boolean announce = config.getBoolean("blackmarket.announce");
 	public static int amountOfItems = Math.abs(Math.min(config.getInt("blackmarket.amountOfItems"), 10));

@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.data.mongo.listings.PlayerListing;
 import org.cwitmer34.marketplace.discord.DiscordWebhook;
@@ -18,7 +18,7 @@ public class ListItemHandler implements Listener {
 
 
 	public ListItemHandler() {
-		TrialMarketplace.getPlugin().getServer().getPluginManager().registerEvents(this, TrialMarketplace.getPlugin());
+		MarketplaceMain.getPlugin().getServer().getPluginManager().registerEvents(this, MarketplaceMain.getPlugin());
 	}
 
 	@EventHandler
@@ -39,11 +39,11 @@ public class ListItemHandler implements Listener {
 											itemStack,
 											listing,
 											MessageConfig.listingAnnounce);
-			TrialMarketplace.getPlugin().getServer().broadcastMessage(broadcast);
+			MarketplaceMain.getPlugin().getServer().broadcastMessage(broadcast);
 		}
 
 		if (MessageConfig.enableDiscordWebhook) {
-			TrialMarketplace.getDiscordWebhook()
+			MarketplaceMain.getDiscordWebhook()
 							.addEmbed(new DiscordWebhook.EmbedObject()
 											.setTitle("New Listing")
 											.setDescription(player.getName() + " just listed an item!" + " This listing has a starting time of " + listing.getDuration())
@@ -57,7 +57,7 @@ public class ListItemHandler implements Listener {
 							);
 
 			try {
-				TrialMarketplace.getDiscordWebhook().execute();
+				MarketplaceMain.getDiscordWebhook().execute();
 			} catch (Exception e) {
 				ConsoleUtil.severe("Could not connect to Discord webhook!");
 			}

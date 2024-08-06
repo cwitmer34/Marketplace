@@ -1,11 +1,11 @@
 package org.cwitmer34.marketplace.util;
 
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 
 import java.util.logging.Logger;
 
 public class ConsoleUtil {
-	static final Logger logger = TrialMarketplace.getPlugin().getLogger();
+	static final Logger logger = MarketplaceMain.getPlugin().getLogger();
 
 	public static void severe(String message) {
 		logger.severe(message);

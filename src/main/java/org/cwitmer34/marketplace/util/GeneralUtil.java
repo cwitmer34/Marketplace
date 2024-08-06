@@ -7,12 +7,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.config.Config;
 import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.data.mongo.listings.PlayerListing;
 import org.cwitmer34.marketplace.items.guiItems.CollectItem;
-import org.cwitmer34.marketplace.items.guiItems.GoToCollectItem;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import xyz.xenondevs.invui.item.Item;
 import xyz.xenondevs.invui.item.impl.SimpleItem;
@@ -21,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,7 +63,7 @@ public class GeneralUtil {
 						.replaceAll("%maxPrice%", String.valueOf(Config.maxPrice))
 						.replaceAll("%starting_duration%", Config.duration)
 						.replaceAll("%maxTransactions%", String.valueOf(Config.maxTransactions))
-						.replaceAll("%totalTransactions%", String.valueOf(TrialMarketplace.getTransactionsHandler().getTransaction(uuid).getTransactions().size()))
+						.replaceAll("%totalTransactions%", String.valueOf(MarketplaceMain.getTransactionsHandler().getTransaction(uuid).getTransactions().size()))
 						.replaceAll("&", "§");
 	}
 

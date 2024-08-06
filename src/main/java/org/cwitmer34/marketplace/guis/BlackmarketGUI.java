@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.config.BMConfig;
 import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.data.mongo.listings.PlayerListing;
@@ -27,7 +27,7 @@ public class BlackmarketGUI {
 	private static int taskID;
 
 	public BlackmarketGUI(int amtOfItems) {
-		Map<String, PlayerListing> listings = TrialMarketplace.getListingsHandler().getListings();
+		Map<String, PlayerListing> listings = MarketplaceMain.getListingsHandler().getListings();
 		Iterator<PlayerListing> listingIterator = listings.values().iterator();
 
 		while (listingIterator.hasNext() && items.size() < amtOfItems) {
@@ -60,14 +60,14 @@ public class BlackmarketGUI {
 			@Override
 			public void run() {
 
-				Map<String, Item> marketplaceItems = TrialMarketplace.getMarketplaceGUI().getItems();
+				Map<String, Item> marketplaceItems = MarketplaceMain.getMarketplaceGUI().getItems();
 				Map<String, Item> blackmarketItems = new HashMap<>();
 				List<String> keys = new ArrayList<>(marketplaceItems.keySet());
 				Collections.shuffle(keys);
 
 				for (int i = 0; i < BMConfig.amountOfItems && i < keys.size(); i++) {
 					String key = keys.get(i);
-					PlayerListing listing = TrialMarketplace.getListingsHandler().getListing(key);
+					PlayerListing listing = MarketplaceMain.getListingsHandler().getListing(key);
 					blackmarketItems.put(listing.getItemUuid(), new BMItem(listing.getSerializedItem(), listing.getPlayerName(), listing.getItemUuid(), listing.getPrice()));
 				}
 				setItems(blackmarketItems);
@@ -77,7 +77,7 @@ public class BlackmarketGUI {
 					Bukkit.broadcastMessage(MessageConfig.prefix + GeneralUtil.colorize(BMConfig.announceMessage));
 				}
 			}
-		}.runTaskTimerAsynchronously(TrialMarketplace.getPlugin(), 0, BMConfig.refreshRate * 20 * 60).getTaskId();
+		}.runTaskTimerAsynchronously(MarketplaceMain.getPlugin(), 0, BMConfig.refreshRate * 20 * 60).getTaskId();
 	}
 
 	public static void updateItems() {

@@ -2,7 +2,7 @@ package org.cwitmer34.marketplace.config;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 
 public class ButtonsConfig {
@@ -28,7 +28,7 @@ public class ButtonsConfig {
 	}
 
 	private static Material getMaterial(String key, Material defaultValue) {
-		ConfigurationSection section = TrialMarketplace.getPlugin().getConfig().getConfigurationSection("buttons");
+		ConfigurationSection section = MarketplaceMain.getPlugin().getConfig().getConfigurationSection("buttons");
 		assert section != null;
 		String value = section.getString(key);
 		if (value != null) {

@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
-import org.bson.json.JsonObject;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
@@ -22,7 +21,7 @@ public class PlayerListing {
 	private int price;
 
 	public final void setPlayerListing() {
-		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
+		try (final Jedis jedis = MarketplaceMain.getRedis().getPool()) {
 			final String key = "listing:" + itemUuid;
 			final JSONObject json = new JSONObject();
 			json.put("playerUuid", playerUuid);
@@ -36,7 +35,7 @@ public class PlayerListing {
 	}
 
 	public final PlayerListing getPlayerListing() {
-		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
+		try (final Jedis jedis = MarketplaceMain.getRedis().getPool()) {
 			final String key = "listing:" + itemUuid;
 			final String json = jedis.get(key);
 			final JSONObject item = new JSONObject(json);
@@ -52,7 +51,7 @@ public class PlayerListing {
 	}
 
 	public final JSONObject getPlayerListingToJson() {
-		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
+		try (final Jedis jedis = MarketplaceMain.getRedis().getPool()) {
 			ConsoleUtil.warning("itemUuid: " + itemUuid);
 			String key = "listing:" + itemUuid;
 			String json = jedis.get(key);
@@ -64,7 +63,7 @@ public class PlayerListing {
 	}
 
 	public final void removeItemFromListing() {
-		try (final Jedis jedis = TrialMarketplace.getRedis().getPool()) {
+		try (final Jedis jedis = MarketplaceMain.getRedis().getPool()) {
 			final String key = "listing:" + itemUuid;
 			jedis.del(key);
 		}

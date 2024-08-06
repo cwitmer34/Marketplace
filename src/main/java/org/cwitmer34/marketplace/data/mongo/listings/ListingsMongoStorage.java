@@ -3,10 +3,9 @@ package org.cwitmer34.marketplace.data.mongo.listings;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 
-import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -19,14 +18,14 @@ public class ListingsMongoStorage implements ListingsStorage {
 			@Override
 			public void run() {
 				final Document query = createDoc(listings.getItemUuid());
-				final Document document = TrialMarketplace.getMongo().getListings().find(query).first();
+				final Document document = MarketplaceMain.getMongo().getListings().find(query).first();
 
 				if (document == null) {
 					save(listings, true);
 					return;
 				}
 			}
-		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+		}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 	}
 
 	@Override
@@ -38,7 +37,7 @@ public class ListingsMongoStorage implements ListingsStorage {
 			@Override
 			public void run() {
 				try {
-					final MongoCollection<Document> collection = TrialMarketplace.getMongo().getListings();
+					final MongoCollection<Document> collection = MarketplaceMain.getMongo().getListings();
 
 					if (collection.countDocuments() == 0) {
 						future.complete(listings);
@@ -61,7 +60,7 @@ public class ListingsMongoStorage implements ListingsStorage {
 					future.completeExceptionally(e);
 				}
 			}
-		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+		}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 
 		return future;
 	}
@@ -73,25 +72,25 @@ public class ListingsMongoStorage implements ListingsStorage {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					final Document document = TrialMarketplace.getMongo().getListings().find(query).first();
+					final Document document = MarketplaceMain.getMongo().getListings().find(query).first();
 
 					if (document == null) {
-						TrialMarketplace.getMongo().getListings().insertOne(listings.toBson());
+						MarketplaceMain.getMongo().getListings().insertOne(listings.toBson());
 						return;
 					}
 
-					TrialMarketplace.getMongo().getListings().replaceOne(document, listings.toBson());
+					MarketplaceMain.getMongo().getListings().replaceOne(document, listings.toBson());
 				}
-			}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+			}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 		} else {
-			final Document document = TrialMarketplace.getMongo().getListings().find(query).first();
+			final Document document = MarketplaceMain.getMongo().getListings().find(query).first();
 			ConsoleUtil.warning("document: " + document);
 			if (document == null) {
-				TrialMarketplace.getMongo().getListings().insertOne(listings.toBson());
+				MarketplaceMain.getMongo().getListings().insertOne(listings.toBson());
 				return;
 			}
 
-			TrialMarketplace.getMongo().getListings().replaceOne(document, listings.toBson());
+			MarketplaceMain.getMongo().getListings().replaceOne(document, listings.toBson());
 		}
 	}
 
@@ -101,13 +100,13 @@ public class ListingsMongoStorage implements ListingsStorage {
 			@Override
 			public void run() {
 				final Document query = createDoc(listings.getItemUuid());
-				final Document document = TrialMarketplace.getMongo().getListings().find(query).first();
+				final Document document = MarketplaceMain.getMongo().getListings().find(query).first();
 
 				if (document != null) {
-					TrialMarketplace.getMongo().getListings().deleteOne(document);
+					MarketplaceMain.getMongo().getListings().deleteOne(document);
 				}
 			}
-		}.runTaskAsynchronously(TrialMarketplace.getPlugin());
+		}.runTaskAsynchronously(MarketplaceMain.getPlugin());
 	}
 
 	private Document createDoc(String itemUuid) {

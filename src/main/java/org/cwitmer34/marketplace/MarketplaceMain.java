@@ -1,6 +1,5 @@
 package org.cwitmer34.marketplace;
 
-import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import lombok.Getter;
@@ -37,7 +36,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public final class TrialMarketplace extends JavaPlugin {
+public final class MarketplaceMain extends JavaPlugin {
 
 	@Getter
 	public static Economy economy = null;
@@ -59,7 +58,7 @@ public final class TrialMarketplace extends JavaPlugin {
 	@Getter
 	public static ListingsHandler listingsHandler;
 	@Getter
-	public static TrialMarketplace plugin;
+	public static MarketplaceMain plugin;
 	public static FileConfiguration config;
 
 	@Override
@@ -134,7 +133,7 @@ public final class TrialMarketplace extends JavaPlugin {
 					getLogger().severe("Failed to fetch listings from MongoDB: " + e.getMessage());
 					ConsoleUtil.severe("Please ensure your MongoDB URI is correct.");
 					ConsoleUtil.severe("Disabling plugin...");
-					getServer().getPluginManager().disablePlugin(TrialMarketplace.getPlugin());
+					getServer().getPluginManager().disablePlugin(MarketplaceMain.getPlugin());
 				}
 			}
 		}.runTaskAsynchronously(this);
@@ -157,7 +156,7 @@ public final class TrialMarketplace extends JavaPlugin {
 					getLogger().severe("Failed to fetch collects from MongoDB: " + e.getMessage());
 					ConsoleUtil.severe("Please ensure your MongoDB URI is correct.");
 					ConsoleUtil.severe("Disabling plugin...");
-					getServer().getPluginManager().disablePlugin(TrialMarketplace.getPlugin());
+					getServer().getPluginManager().disablePlugin(MarketplaceMain.getPlugin());
 				}
 			}
 		}.runTaskAsynchronously(this);
@@ -179,7 +178,7 @@ public final class TrialMarketplace extends JavaPlugin {
 					getLogger().severe("Failed to fetch listings from MongoDB: " + e.getMessage());
 					ConsoleUtil.severe("Please ensure your MongoDB URI is correct.");
 					ConsoleUtil.severe("Disabling plugin...");
-					getServer().getPluginManager().disablePlugin(TrialMarketplace.getPlugin());
+					getServer().getPluginManager().disablePlugin(MarketplaceMain.getPlugin());
 				}
 			}
 		}.runTaskAsynchronously(this);

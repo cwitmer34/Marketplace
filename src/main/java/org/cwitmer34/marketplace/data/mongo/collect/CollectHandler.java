@@ -3,7 +3,7 @@ package org.cwitmer34.marketplace.data.mongo.collect;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import org.bson.Document;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 import org.cwitmer34.marketplace.util.ConsoleUtil;
 
 import java.util.*;
@@ -68,7 +68,7 @@ public class CollectHandler {
 		long startTime = System.currentTimeMillis();
 		int totalCollectsSynced = 0;
 
-		MongoCollection<Document> collection = TrialMarketplace.getMongo().getCollect();
+		MongoCollection<Document> collection = MarketplaceMain.getMongo().getCollect();
 		try (MongoCursor<Document> cursor = collection.find().iterator()) {
 			while (cursor.hasNext()) {
 				Document doc = cursor.next();

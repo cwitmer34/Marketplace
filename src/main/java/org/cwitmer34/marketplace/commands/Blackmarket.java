@@ -5,8 +5,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.cwitmer34.marketplace.TrialMarketplace;
-import org.cwitmer34.marketplace.config.BMConfig;
 import org.cwitmer34.marketplace.config.MessageConfig;
 import org.cwitmer34.marketplace.guis.BlackmarketGUI;
 import org.cwitmer34.marketplace.util.GeneralUtil;

@@ -3,15 +3,14 @@ package org.cwitmer34.marketplace.config;
 import lombok.Data;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.cwitmer34.marketplace.TrialMarketplace;
+import org.cwitmer34.marketplace.MarketplaceMain;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Data
 public class Config {
-	private static FileConfiguration config = TrialMarketplace.getPlugin().getConfig();
+	private static FileConfiguration config = MarketplaceMain.getPlugin().getConfig();
 
 	public static final String discordWebhook = config.getString("discord-webhook");
 
